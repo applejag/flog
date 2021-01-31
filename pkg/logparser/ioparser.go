@@ -24,10 +24,10 @@ func (p *IOParser) Scan() bool {
 	if !p.scanner.Scan() {
 		return false
 	}
-	txt := p.scanner.Text()
-	p.lastLog = ParsedLog{
-		String: txt,
-		Level:  LevelError,
+	lastLevel := p.lastLog.Level
+	p.lastLog = parseLog(p.scanner.Text())
+	if p.lastLog.Level == LevelUnknown {
+		p.lastLog.Level = lastLevel
 	}
 	return true
 }

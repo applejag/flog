@@ -11,7 +11,6 @@ var logger = loggerFactory.CreateLogger("Program");
 logger.LogTrace("Sample");
 logger.LogDebug("Sample");
 logger.LogInformation("Sample");
-logger.LogWarning("Sample");
+logger.LogWarning("Sample\n\tMultiline\n\t:)");
 logger.LogError("Sample");
 logger.LogCritical("Sample");
-

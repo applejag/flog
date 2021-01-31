@@ -17,38 +17,51 @@ const (
 	LevelPanic
 )
 
+func (lvl Level) String() string {
+	switch lvl {
+	case LevelTrace:
+		return "LevelTrace"
+	case LevelDebug:
+		return "LevelDebug"
+	case LevelInformation:
+		return "LevelInformation"
+	case LevelWarning:
+		return "LevelWarning"
+	case LevelFail:
+		return "LevelFail"
+	case LevelError:
+		return "LevelError"
+	case LevelCritical:
+		return "LevelCritical"
+	case LevelFatal:
+		return "LevelFatal"
+	case LevelPanic:
+		return "LevelPanic"
+	}
+	return "LevelUnknown"
+}
+
 func ParseLevel(s string) Level {
 	switch strings.ToLower(s) {
-	case "trc":
-	case "trce":
-	case "trac":
-	case "trace":
+	case "trc", "trce", "trac", "trace":
 		return LevelTrace
 
-	case "dbg":
-	case "dbug":
-	case "debg":
-	case "debug":
+	case "dbg", "dbug", "debg", "debug":
 		return LevelDebug
 
-	case "inf":
-	case "info":
-	case "information":
+	case "inf", "info", "information":
 		return LevelInformation
 
-	case "warn":
-	case "warning":
+	case "warn", "warning":
 		return LevelWarning
 
 	case "fail":
 		return LevelFail
 
-	case "err":
-	case "error":
+	case "err", "error":
 		return LevelError
 
-	case "crit":
-	case "critical":
+	case "crit", "critical":
 		return LevelCritical
 
 	case "fatal":
