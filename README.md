@@ -21,6 +21,7 @@ FATA[0000] A walrus appears                              animal=walrus
 And yes, this includes multiline logs, such as those pesky .NET logs:
 
 ```sh
+# Sample .NET app using Microsoft.Extensions.Logging.Console
 $ dotnet run
 trac: Program[0]
       Sample log
