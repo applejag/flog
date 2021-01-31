@@ -13,8 +13,8 @@ type Parser interface {
 	ParsedLog() ParsedLog
 }
 
-var datetimeRegex = regexp.MustCompile(`\d{4}-\d\d?-\d\d?(?:[ ·T]\d\d?[:.]\d\d?(?:[:.]\d+(?:\.\d+)?)?Z?)?`)
-var levelRegex = regexp.MustCompile(`\|\w+\||\(\w+\)|\[\w+\]|\w+:`)
+var datetimeRegex = regexp.MustCompile(`\d{4}-\d\d?-\d\d?(?:[ ·T]\d\d?[:.]\d\d?(?:[:.]\d+(?:\.\d+)?)?(Z|[-+ ]\d\d?([:.]\d{1,3})?)?)?`)
+var levelRegex = regexp.MustCompile(`\(\w+\)|\[\w+\]|'\w+'|"\w+"|\w+[\[(|:]|=\w+`)
 
 func parseLog(s string) ParsedLog {
 	if len(s) > 0 && unicode.IsSpace(rune(s[0])) {
@@ -32,7 +32,7 @@ func parseLog(s string) ParsedLog {
 	var level Level
 	if lvls := levelRegex.FindAllString(stripped, 5); lvls != nil {
 		for _, lvlStr := range lvls {
-			lvlStr = strings.Trim(lvlStr, "|[]():")
+			lvlStr = strings.Trim(lvlStr, "|[]():=\"'")
 			if lvl := ParseLevel(lvlStr); lvl != LevelUnknown {
 				level = lvl
 				break
