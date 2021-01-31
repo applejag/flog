@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/jilleJr/flog/pkg/logparser"
@@ -9,11 +8,8 @@ import (
 
 func main() {
 	p := logparser.NewIOParser(os.Stdin)
+	printer := NewConsolePrinter(&p)
 
-	for p.Scan() {
-		log := p.ParsedLog()
-		if log.Level > logparser.LevelInformation {
-			fmt.Println(log.String)
-		}
+	for printer.Next() {
 	}
 }
