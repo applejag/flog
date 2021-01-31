@@ -46,7 +46,7 @@ func ParseLevel(s string) Level {
 	case "trc", "trce", "trac", "trace":
 		return LevelTrace
 
-	case "dbg", "dbug", "debg", "debug":
+	case "dbg", "debu", "dbug", "debg", "debug":
 		return LevelDebug
 
 	case "inf", "info", "information":
@@ -58,7 +58,7 @@ func ParseLevel(s string) Level {
 	case "fail":
 		return LevelFail
 
-	case "err", "error":
+	case "err", "erro", "error":
 		return LevelError
 
 	case "crit", "critical":
