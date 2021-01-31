@@ -25,7 +25,7 @@ func (p consolePrinter) Next() bool {
 		return false
 	}
 	log := p.parser.ParsedLog()
-	if log.Level > logparser.LevelInformation {
+	if log.Level > logparser.LevelDebug {
 		fmt.Println(log.String)
 	}
 	return true

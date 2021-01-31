@@ -11,7 +11,7 @@ func main() {
 	log.Out = os.Stdout
 	log.SetLevel(logrus.TraceLevel)
 	log.SetFormatter(&logrus.TextFormatter{
-		//ForceColors: true,
+		ForceColors: true,
 	})
 
 	log.WithFields(logrus.Fields{
@@ -32,7 +32,7 @@ func main() {
 
 	log.WithFields(logrus.Fields{
 		"animal": "walrus",
-	}).Error("A walrus appears\n\tSome\n\tMultiline")
+	}).Error("A walrus appears")
 
 	log.WithFields(logrus.Fields{
 		"animal": "walrus",
