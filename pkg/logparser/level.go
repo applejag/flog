@@ -64,7 +64,7 @@ func ParseLevel(s string) Level {
 	case "crit", "critical":
 		return LevelCritical
 
-	case "fatal":
+	case "fata", "fatal":
 		return LevelFatal
 
 	case "panic":
