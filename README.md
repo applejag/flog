@@ -42,5 +42,8 @@ fail: Program[0]
 ```
 
 
-This project is still under its planning phase. You are welcome to participate in the design discussions: https://github.com/jilleJr/flog/discussions/categories/ideas
+This project is under prototype phase.
+
+You are welcome to try it out or participate in the design discussions:
+<https://github.com/jilleJr/flog/discussions/categories/ideas>
 
