@@ -2,6 +2,8 @@
 
 Filter logs on their serverity, with automatic detection of log formats
 
+## Sample usage
+
 ```sh
 # Sample Go app using sirupsen/logrus
 $ go run main.go
@@ -41,6 +43,35 @@ fail: Program[0]
       Sample log
 ```
 
+## Command-line interface
+
+```sh
+~/dev/flog main ❯ flog --help
+Usage: flog [<paths> ...]
+
+Arguments:
+  [<paths> ...]    File(s) to read logs from. Uses STDIN if unspecified
+
+Flags:
+  -h, --help                   Show context-sensitive help.
+  -s, --min="info"             Filter out logs below specified severity (exclusive)
+  -S, --max="none"             Filter out logs above specified severity (exclusive) [Not yet implemented]
+  -t, --since=STRING           Filter out logs timestamped before a specific time (or relative time period ago) [Not yet implemented]
+  -t, --before=STRING          Filter out logs timestamped after a specific time (or relative time period ago) [Not yet implemented]
+  -e, --exclude=EXCLUDE,...    Filter out logs of specified severity (can be specified multiple times) [Not yet implemented]
+```
+
+## Installation
+
+1. Install Go
+
+2. Run the following (outside of a Go project)
+
+   ```sh
+   go get github.com/jilleJr/flog
+   ```
+
+## Note
 
 This project is under prototype phase.
 
