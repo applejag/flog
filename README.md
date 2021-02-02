@@ -71,6 +71,20 @@ Flags:
    go get github.com/jilleJr/flog
    ```
 
+## Main use case
+
+Searching through logs in Kubernetes. For example, to find any error logs in
+Kubernetes logs you'd usually have to use `grep` with some extreamly high
+context so that you get a glimpse of what the error was about.
+
+With `flog` you can just run:
+
+```sh
+kubectl logs name-of-my-pod | flog -s err
+```
+
+And there you have it.
+
 ## Note
 
 This project is under prototype phase.
