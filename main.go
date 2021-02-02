@@ -19,12 +19,6 @@ var cli struct {
 	Paths          []string `arg optional type:"existingfile" help:"File(s) to read logs from. Uses STDIN if unspecified"`
 }
 
-//--min, -s <severity>      Filter out everything below a specific severity (exclusive)
-//--max, -S <severity>      Filter out everthing above specific severity (exclusive)
-//--since, -t <time>        Filter out everything before a specific time (or relative time period ago)
-//--before, -T <time>       Filter out everything after a specific time (or relative time period ago)
-//--exclude, -e <severity>  Filter out a specific severity
-
 func main() {
 	kong.Parse(&cli)
 
@@ -41,7 +35,7 @@ func main() {
 
 func printLogsFromFile(path string, minLevel logparser.Level) {
 	if file, err := os.Open(path); err != nil {
-		fmt.Printf("ERR: Failed to open file: %s\n", path)
+		fmt.Printf("ERR: Failed to open file: %s: %v\n", path, err)
 		os.Exit(1)
 	} else {
 		defer file.Close()
