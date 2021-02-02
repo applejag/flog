@@ -12,11 +12,13 @@ type Printer interface {
 
 type consolePrinter struct {
 	parser logparser.Parser
+	level  logparser.Level
 }
 
-func NewConsolePrinter(p logparser.Parser) Printer {
+func NewConsolePrinter(p logparser.Parser, lvl logparser.Level) Printer {
 	return consolePrinter{
 		parser: p,
+		level:  lvl,
 	}
 }
 
@@ -25,7 +27,7 @@ func (p consolePrinter) Next() bool {
 		return false
 	}
 	log := p.parser.ParsedLog()
-	if log.Level > logparser.LevelDebug {
+	if log.Level >= p.level {
 		fmt.Println(log.String)
 	}
 	return true
