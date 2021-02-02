@@ -46,7 +46,7 @@ fail: Program[0]
 ## Command-line interface
 
 ```sh
-~/dev/flog main ❯ flog --help
+$ flog --help
 Usage: flog [<paths> ...]
 
 Arguments:
