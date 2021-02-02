@@ -5,12 +5,11 @@ import "strings"
 type Level int
 
 const (
-	LevelUnknown Level = iota
+	LevelUndefined Level = iota
 	LevelTrace
 	LevelDebug
 	LevelInformation
 	LevelWarning
-	LevelFail
 	LevelError
 	LevelCritical
 	LevelFatal
@@ -27,8 +26,6 @@ func (lvl Level) String() string {
 		return "LevelInformation"
 	case LevelWarning:
 		return "LevelWarning"
-	case LevelFail:
-		return "LevelFail"
 	case LevelError:
 		return "LevelError"
 	case LevelCritical:
@@ -38,7 +35,7 @@ func (lvl Level) String() string {
 	case LevelPanic:
 		return "LevelPanic"
 	}
-	return "LevelUnknown"
+	return "LevelUndefined"
 }
 
 func ParseLevel(s string) Level {
@@ -55,10 +52,7 @@ func ParseLevel(s string) Level {
 	case "warn", "warning":
 		return LevelWarning
 
-	case "fail":
-		return LevelFail
-
-	case "err", "erro", "error":
+	case "err", "erro", "error", "fail":
 		return LevelError
 
 	case "crit", "critical":
@@ -71,5 +65,5 @@ func ParseLevel(s string) Level {
 		return LevelPanic
 	}
 
-	return LevelUnknown
+	return LevelUndefined
 }
