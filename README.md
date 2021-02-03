@@ -15,6 +15,7 @@ ERRO[0000] A walrus appears                              animal=walrus
 FATA[0000] A walrus appears                              animal=walrus
 
 $ go run main.go | flog -s warn
+flog: Omitted 1 Trace, 1 Debug, 1 Information.
 WARN[0000] A walrus appears                              animal=walrus
 ERRO[0000] A walrus appears                              animal=walrus
 FATA[0000] A walrus appears                              animal=walrus
@@ -37,6 +38,7 @@ fail: Program[0]
       Sample log
 
 $ dotnet run | flog -s warn
+flog: Omitted 1 Trace, 1 Debug, 1 Information.
 warn: Program[0]
       Sample log
 fail: Program[0]
@@ -54,11 +56,13 @@ Arguments:
 
 Flags:
   -h, --help                   Show context-sensitive help.
-  -s, --min="info"             Filter out logs below specified severity (exclusive)
-  -S, --max="none"             Filter out logs above specified severity (exclusive) [Not yet implemented]
-  -t, --since=STRING           Filter out logs timestamped before a specific time (or relative time period ago) [Not yet implemented]
-  -t, --before=STRING          Filter out logs timestamped after a specific time (or relative time period ago) [Not yet implemented]
-  -e, --exclude=EXCLUDE,...    Filter out logs of specified severity (can be specified multiple times) [Not yet implemented]
+  -s, --min="info"             Omit logs below specified severity (exclusive)
+  -S, --max="none"             Omit logs above specified severity (exclusive)
+  -t, --since=STRING           Omit logs timestamped before a specific time (or relative time period ago) [Not yet implemented]
+  -t, --before=STRING          Omit logs timestamped after a specific time (or relative time period ago) [Not yet implemented]
+  -e, --exclude=EXCLUDE,...    Omit logs of specified severity (can be specified multiple times)
+  -i, --include=INCLUDE,...    Omit logs of severity not specified with this flag (can be specified multiple times)
+  -q, --quiet                  Omit the 'omitted logs' messages.
 ```
 
 ## Installation
