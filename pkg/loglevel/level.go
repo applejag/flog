@@ -5,7 +5,8 @@ import "strings"
 type Level int
 
 const (
-	Undefined Level = iota
+	Undefined Level = 0
+	Unknown   Level = 1 << (iota - 1)
 	Trace
 	Debug
 	Information
@@ -16,8 +17,38 @@ const (
 	Panic
 )
 
+var singularLevels = []Level{
+	Unknown,
+	Trace,
+	Debug,
+	Information,
+	Warning,
+	Error,
+	Critical,
+	Fatal,
+	Panic,
+}
+
 func (lvl Level) String() string {
+	var b = strings.Builder{}
+	for _, singularLevel := range singularLevels {
+		if lvl&singularLevel != Undefined {
+			if b.Len() > 0 {
+				b.WriteRune('|')
+			}
+			b.WriteString(singularLevelString(singularLevel))
+		}
+	}
+	if b.Len() == 0 {
+		return "Undefined"
+	}
+	return b.String()
+}
+
+func singularLevelString(lvl Level) string {
 	switch lvl {
+	case Unknown:
+		return "Unknown"
 	case Trace:
 		return "Trace"
 	case Debug:
@@ -65,5 +96,5 @@ func ParseLevel(s string) Level {
 		return Panic
 	}
 
-	return Undefined
+	return Unknown
 }
