@@ -15,41 +15,56 @@ import (
 
 var cli struct {
 	MinLevel       string   `name:"min" short:"s" default:"info" help:"Filter out logs below specified severity (exclusive)" enum:"n,non,none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
-	MaxLevel       string   `name:"max" short:"S" default:"none" help:"Filter out logs above specified severity (exclusive) [Not yet implemented]" enum:"n,non,none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
+	MaxLevel       string   `name:"max" short:"S" default:"none" help:"Filter out logs above specified severity (exclusive)" enum:"n,non,none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
 	MinTime        string   `name:"since" short:"t" help:"Filter out logs timestamped before a specific time (or relative time period ago) [Not yet implemented]"`
 	MaxTime        string   `name:"before" short:"t" help:"Filter out logs timestamped after a specific time (or relative time period ago) [Not yet implemented]"`
-	ExcludedLevels []string `name:"exclude" short:"e" help:"Filter out logs of specified severity (can be specified multiple times) [Not yet implemented]" enum:"n,non,none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
+	ExcludedLevels []string `name:"exclude" short:"e" help:"Filter out logs of specified severity (can be specified multiple times)" enum:"n,non,none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
 	Paths          []string `arg optional type:"existingfile" help:"File(s) to read logs from. Uses STDIN if unspecified"`
+	Quiet          bool     `name:"quiet" short:"q" help:"Omit the 'omitted logs' messages."`
 }
+
+type LogFilter struct {
+	MinLevel loglevel.Level
+	MaxLevel loglevel.Level
+	Quiet    bool
+	Excluded map[loglevel.Level]bool
+}
+
+var logFilter LogFilter
 
 func main() {
 	kong.Parse(&cli)
 
-	minLevel := parseLevelArg(cli.MinLevel)
+	filter := LogFilter{
+		MinLevel: parseLevelArg(cli.MinLevel),
+		MaxLevel: parseLevelArg(cli.MinLevel),
+		Quiet:    cli.Quiet,
+		Excluded: parseLevelArgsAsMap(cli.ExcludedLevels),
+	}
 
 	if len(cli.Paths) > 0 {
 		for _, path := range cli.Paths {
-			printLogsFromFile(path, minLevel)
+			printLogsFromFile(path, filter)
 		}
 	} else {
-		printLogsFromIO(os.Stdin, minLevel)
+		printLogsFromIO(os.Stdin, filter)
 	}
 }
 
-func printLogsFromFile(path string, minLevel loglevel.Level) {
+func printLogsFromFile(path string, filter LogFilter) {
 	if file, err := os.Open(path); err != nil {
 		fmt.Printf("ERR: Failed to open file: %s: %v\n", path, err)
 		os.Exit(1)
 	} else {
 		defer file.Close()
-		printLogsFromIO(file, minLevel)
+		printLogsFromIO(file, filter)
 	}
 }
 
-func printLogsFromIO(r io.Reader, minLevel loglevel.Level) {
+func printLogsFromIO(r io.Reader, filter LogFilter) {
 	p := logparser.NewIOParser(r)
 
-	printer := NewConsolePrinter(&p, minLevel)
+	printer := NewConsolePrinter(&p, filter)
 	ch := setupCloseHandler(printer)
 	defer close(ch)
 
@@ -70,6 +85,16 @@ func setupCloseHandler(p Printer) chan<- os.Signal {
 		}
 	}(p)
 	return ch
+}
+
+func parseLevelArgsAsMap(slice []string) map[loglevel.Level]bool {
+	m := map[loglevel.Level]bool{}
+	for _, lvlStr := range slice {
+		if lvl := parseLevelArg(lvlStr); lvl != loglevel.Undefined {
+			m[lvl] = true
+		}
+	}
+	return m
 }
 
 func parseLevelArg(s string) loglevel.Level {
