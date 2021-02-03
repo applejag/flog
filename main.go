@@ -14,20 +14,22 @@ import (
 )
 
 var cli struct {
-	MinLevel       string   `name:"min" short:"s" default:"info" help:"Filter out logs below specified severity (exclusive)" enum:"n,non,none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
-	MaxLevel       string   `name:"max" short:"S" default:"none" help:"Filter out logs above specified severity (exclusive)" enum:"n,non,none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
+	MinLevel       string   `name:"min" short:"s" default:"info" help:"Filter out logs below specified severity (exclusive)" enum:"t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
+	MaxLevel       string   `name:"max" short:"S" default:"none" help:"Filter out logs above specified severity (exclusive)" enum:"t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
 	MinTime        string   `name:"since" short:"t" help:"Filter out logs timestamped before a specific time (or relative time period ago) [Not yet implemented]"`
 	MaxTime        string   `name:"before" short:"t" help:"Filter out logs timestamped after a specific time (or relative time period ago) [Not yet implemented]"`
-	ExcludedLevels []string `name:"exclude" short:"e" help:"Filter out logs of specified severity (can be specified multiple times)" enum:"n,non,none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
+	ExcludedLevels []string `name:"exclude" short:"e" help:"Filter out logs of specified severity (can be specified multiple times)" enum:"u,?,ukwn,unknown,undefined,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
+	IncludedLevels []string `name:"include" short:"i" help:"Filter out logs of severity not specified with this flag (can be specified multiple times)" enum:"u,?,ukwn,unknown,undefined,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
 	Paths          []string `arg optional type:"existingfile" help:"File(s) to read logs from. Uses STDIN if unspecified"`
 	Quiet          bool     `name:"quiet" short:"q" help:"Omit the 'omitted logs' messages."`
 }
 
 type LogFilter struct {
-	MinLevel loglevel.Level
-	MaxLevel loglevel.Level
-	Quiet    bool
-	Excluded map[loglevel.Level]bool
+	MinLevel      loglevel.Level
+	MaxLevel      loglevel.Level
+	Quiet         bool
+	BlacklistMask loglevel.Level
+	WhitelistMask loglevel.Level
 }
 
 var logFilter LogFilter
@@ -36,10 +38,11 @@ func main() {
 	kong.Parse(&cli)
 
 	filter := LogFilter{
-		MinLevel: parseLevelArg(cli.MinLevel),
-		MaxLevel: parseLevelArg(cli.MinLevel),
-		Quiet:    cli.Quiet,
-		Excluded: parseLevelArgsAsMap(cli.ExcludedLevels),
+		MinLevel:      parseLevelArg(cli.MinLevel),
+		MaxLevel:      parseLevelArg(cli.MinLevel),
+		Quiet:         cli.Quiet,
+		BlacklistMask: parseLevelArgsAsBitmask(cli.ExcludedLevels),
+		WhitelistMask: parseLevelArgsAsBitmask(cli.IncludedLevels),
 	}
 
 	if len(cli.Paths) > 0 {
@@ -87,18 +90,19 @@ func setupCloseHandler(p Printer) chan<- os.Signal {
 	return ch
 }
 
-func parseLevelArgsAsMap(slice []string) map[loglevel.Level]bool {
-	m := map[loglevel.Level]bool{}
+func parseLevelArgsAsBitmask(slice []string) loglevel.Level {
+	m := loglevel.Undefined
 	for _, lvlStr := range slice {
-		if lvl := parseLevelArg(lvlStr); lvl != loglevel.Undefined {
-			m[lvl] = true
-		}
+		m |= parseLevelArg(lvlStr)
 	}
 	return m
 }
 
 func parseLevelArg(s string) loglevel.Level {
 	switch strings.ToLower(s) {
+	case "u", "?", "ukwn", "unknown":
+		return loglevel.Unknown
+
 	case "t", "tra", "trac", "trce", "trace":
 		return loglevel.Trace
 

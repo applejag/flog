@@ -34,7 +34,7 @@ func (p *consolePrinter) Next() bool {
 		return false
 	}
 	log := p.parser.ParsedLog()
-	if shouldIncludeLogInOutput(log, p.filter) {
+	if shouldIncludeLogInOutput(log.Level, p.filter) {
 		if p.skippedAny {
 			if p.filter.Quiet == false {
 				printSkippedLogs(p.levelsSkipped)
@@ -54,20 +54,25 @@ func (p *consolePrinter) Next() bool {
 	return true
 }
 
-func shouldIncludeLogInOutput(log logparser.ParsedLog, filter LogFilter) bool {
-	if log.Level == loglevel.Undefined {
-		return true
-	}
-
-	if filter.MinLevel != loglevel.Undefined && log.Level < filter.MinLevel {
+func shouldIncludeLogInOutput(logLevel loglevel.Level, filter LogFilter) bool {
+	if filter.WhitelistMask == loglevel.Undefined {
+		// Unless when using whitelist, always include logs if they're unknown
+		if logLevel == loglevel.Unknown {
+			return true
+		}
+	} else if filter.WhitelistMask&logLevel == loglevel.Undefined {
 		return false
 	}
 
-	if filter.MaxLevel != loglevel.Undefined && log.Level > filter.MaxLevel {
+	if filter.MinLevel != loglevel.Undefined && logLevel < filter.MinLevel {
 		return false
 	}
 
-	if _, ok := filter.Excluded[log.Level]; ok {
+	if filter.MaxLevel != loglevel.Undefined && logLevel > filter.MaxLevel {
+		return false
+	}
+
+	if filter.BlacklistMask&logLevel != loglevel.Undefined {
 		return false
 	}
 
