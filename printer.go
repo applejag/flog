@@ -10,6 +10,7 @@ import (
 
 type Printer interface {
 	Next() bool
+	PrintOmittedLogs()
 }
 
 type consolePrinter struct {
@@ -49,6 +50,12 @@ func (p *consolePrinter) Next() bool {
 		}
 	}
 	return true
+}
+
+func (p *consolePrinter) PrintOmittedLogs() {
+	if p.skippedAny {
+		printSkippedLogs(p.levelsSkipped)
+	}
 }
 
 const (

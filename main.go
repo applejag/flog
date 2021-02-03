@@ -48,6 +48,7 @@ func printLogsFromIO(r io.Reader, minLevel loglevel.Level) {
 	p := logparser.NewIOParser(r)
 
 	printer := NewConsolePrinter(&p, minLevel)
+	defer printer.PrintOmittedLogs()
 
 	for printer.Next() {
 	}
