@@ -54,25 +54,27 @@ func (p *consolePrinter) Next() bool {
 	return true
 }
 
-func shouldIncludeLogInOutput(logLevel loglevel.Level, filter LogFilter) bool {
+func shouldIncludeLogInOutput(lvl loglevel.Level, filter LogFilter) bool {
 	if filter.WhitelistMask == loglevel.Undefined {
 		// Unless when using whitelist, always include logs if they're unknown
-		if logLevel == loglevel.Unknown {
+		if lvl == loglevel.Unknown {
 			return true
 		}
-	} else if filter.WhitelistMask&logLevel == loglevel.Undefined {
+	} else if filter.WhitelistMask&lvl == loglevel.Undefined {
 		return false
 	}
 
-	if filter.MinLevel != loglevel.Undefined && logLevel < filter.MinLevel {
-		return false
+	if lvl != loglevel.Unknown {
+		if filter.MinLevel != loglevel.Undefined && lvl < filter.MinLevel {
+			return false
+		}
+
+		if filter.MaxLevel != loglevel.Undefined && lvl > filter.MaxLevel {
+			return false
+		}
 	}
 
-	if filter.MaxLevel != loglevel.Undefined && logLevel > filter.MaxLevel {
-		return false
-	}
-
-	if filter.BlacklistMask&logLevel != loglevel.Undefined {
+	if filter.BlacklistMask&lvl != loglevel.Undefined {
 		return false
 	}
 
