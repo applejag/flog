@@ -33,7 +33,7 @@ func main() {
 	}
 }
 
-func printLogsFromFile(path string, minLevel logparser.Level) {
+func printLogsFromFile(path string, minLevel loglevel.Level) {
 	if file, err := os.Open(path); err != nil {
 		fmt.Printf("ERR: Failed to open file: %s: %v\n", path, err)
 		os.Exit(1)
@@ -43,7 +43,7 @@ func printLogsFromFile(path string, minLevel logparser.Level) {
 	}
 }
 
-func printLogsFromIO(r io.Reader, minLevel logparser.Level) {
+func printLogsFromIO(r io.Reader, minLevel loglevel.Level) {
 	p := logparser.NewIOParser(r)
 
 	printer := NewConsolePrinter(&p, minLevel)
@@ -52,32 +52,32 @@ func printLogsFromIO(r io.Reader, minLevel logparser.Level) {
 	}
 }
 
-func parseLevelArg(s string) logparser.Level {
+func parseLevelArg(s string) loglevel.Level {
 	switch strings.ToLower(s) {
 	case "t", "tra", "trac", "trce", "trace":
-		return logparser.LevelTrace
+		return loglevel.LevelTrace
 
 	case "d", "deb", "dbg", "debu", "debg", "dbug", "debug":
-		return logparser.LevelDebug
+		return loglevel.LevelDebug
 
 	case "i", "inf", "info", "information":
-		return logparser.LevelInformation
+		return loglevel.LevelInformation
 
 	case "w", "wrn", "warn", "warning":
-		return logparser.LevelWarning
+		return loglevel.LevelWarning
 
 	case "fail", "e", "err", "erro", "errr", "error":
-		return logparser.LevelError
+		return loglevel.LevelError
 
 	case "c", "crt", "crit", "critical":
-		return logparser.LevelCritical
+		return loglevel.LevelCritical
 
 	case "f", "fata", "fatl", "fatal":
-		return logparser.LevelFatal
+		return loglevel.LevelFatal
 
 	case "p", "pan", "pnc", "pani", "panic":
-		return logparser.LevelPanic
+		return loglevel.LevelPanic
 	}
 
-	return logparser.LevelUndefined
+	return loglevel.LevelUndefined
 }

@@ -3,6 +3,8 @@ package logparser
 import (
 	"bufio"
 	"io"
+
+	"github.com/jilleJr/flog/pkg/loglevel"
 )
 
 type IOParser struct {
@@ -26,7 +28,7 @@ func (p *IOParser) Scan() bool {
 	}
 	lastLevel := p.lastLog.Level
 	p.lastLog = parseLog(p.scanner.Text())
-	if p.lastLog.Level == LevelUndefined {
+	if p.lastLog.Level == loglevel.LevelUndefined {
 		p.lastLog.Level = lastLevel
 	}
 	return true

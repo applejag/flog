@@ -1,4 +1,4 @@
-package logparser
+package loglevel
 
 import "strings"
 
@@ -6,33 +6,33 @@ type Level int
 
 const (
 	LevelUndefined Level = iota
-	LevelTrace
-	LevelDebug
-	LevelInformation
-	LevelWarning
-	LevelError
-	LevelCritical
-	LevelFatal
-	LevelPanic
+	Trace
+	Debug
+	Information
+	Warning
+	Error
+	Critical
+	Fatal
+	Panic
 )
 
 func (lvl Level) String() string {
 	switch lvl {
-	case LevelTrace:
+	case Trace:
 		return "LevelTrace"
-	case LevelDebug:
+	case Debug:
 		return "LevelDebug"
-	case LevelInformation:
+	case Information:
 		return "LevelInformation"
-	case LevelWarning:
+	case Warning:
 		return "LevelWarning"
-	case LevelError:
+	case Error:
 		return "LevelError"
-	case LevelCritical:
+	case Critical:
 		return "LevelCritical"
-	case LevelFatal:
+	case Fatal:
 		return "LevelFatal"
-	case LevelPanic:
+	case Panic:
 		return "LevelPanic"
 	}
 	return "LevelUndefined"
@@ -41,28 +41,28 @@ func (lvl Level) String() string {
 func ParseLevel(s string) Level {
 	switch strings.ToLower(s) {
 	case "trc", "trce", "trac", "trace":
-		return LevelTrace
+		return Trace
 
 	case "dbg", "debu", "dbug", "debg", "debug":
-		return LevelDebug
+		return Debug
 
 	case "inf", "info", "information":
-		return LevelInformation
+		return Information
 
 	case "warn", "warning":
-		return LevelWarning
+		return Warning
 
 	case "err", "erro", "error", "fail":
-		return LevelError
+		return Error
 
 	case "crit", "critical":
-		return LevelCritical
+		return Critical
 
 	case "fata", "fatal":
-		return LevelFatal
+		return Fatal
 
 	case "panic":
-		return LevelPanic
+		return Panic
 	}
 
 	return LevelUndefined

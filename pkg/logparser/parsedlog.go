@@ -1,9 +1,13 @@
 package logparser
 
-import "time"
+import (
+	"time"
+
+	"github.com/jilleJr/flog/pkg/loglevel"
+)
 
 type ParsedLog struct {
-	Level     Level
+	Level     loglevel.Level
 	String    string
 	Timestamp time.Time
 }
