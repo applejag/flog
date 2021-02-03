@@ -21,7 +21,7 @@ func parseLog(s string) ParsedLog {
 	if len(s) > 0 && unicode.IsSpace(rune(s[0])) {
 		return ParsedLog{
 			String: s,
-			Level:  loglevel.LevelUndefined,
+			Level:  loglevel.Undefined,
 		}
 	}
 
@@ -34,7 +34,7 @@ func parseLog(s string) ParsedLog {
 	if lvls := levelRegex.FindAllString(stripped, 5); lvls != nil {
 		for _, lvlStr := range lvls {
 			lvlStr = strings.Trim(lvlStr, "|[]():=\"'")
-			if lvl := loglevel.ParseLevel(lvlStr); lvl != loglevel.LevelUndefined {
+			if lvl := loglevel.ParseLevel(lvlStr); lvl != loglevel.Undefined {
 				level = lvl
 				break
 			}

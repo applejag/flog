@@ -99,5 +99,5 @@ func parseLevelArg(s string) loglevel.Level {
 		return loglevel.Panic
 	}
 
-	return loglevel.LevelUndefined
+	return loglevel.Undefined
 }

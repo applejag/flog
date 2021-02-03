@@ -5,7 +5,7 @@ import "strings"
 type Level int
 
 const (
-	LevelUndefined Level = iota
+	Undefined Level = iota
 	Trace
 	Debug
 	Information
@@ -65,5 +65,5 @@ func ParseLevel(s string) Level {
 		return Panic
 	}
 
-	return LevelUndefined
+	return Undefined
 }
