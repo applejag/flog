@@ -6,6 +6,7 @@ import (
 	"unicode"
 
 	"github.com/acarl005/stripansi"
+	"github.com/jilleJr/flog/pkg/loglevel"
 )
 
 type Parser interface {
@@ -20,7 +21,7 @@ func parseLog(s string) ParsedLog {
 	if len(s) > 0 && unicode.IsSpace(rune(s[0])) {
 		return ParsedLog{
 			String: s,
-			Level:  LevelUndefined,
+			Level:  loglevel.Undefined,
 		}
 	}
 
@@ -29,11 +30,11 @@ func parseLog(s string) ParsedLog {
 		stripped = stripped[loc[1]:]
 	}
 
-	var level Level
+	var level loglevel.Level
 	if lvls := levelRegex.FindAllString(stripped, 5); lvls != nil {
 		for _, lvlStr := range lvls {
 			lvlStr = strings.Trim(lvlStr, "|[]():=\"'")
-			if lvl := ParseLevel(lvlStr); lvl != LevelUndefined {
+			if lvl := loglevel.ParseLevel(lvlStr); lvl != loglevel.Undefined {
 				level = lvl
 				break
 			}

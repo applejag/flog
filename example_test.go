@@ -3,6 +3,7 @@ package main
 import (
 	"strings"
 
+	"github.com/jilleJr/flog/pkg/loglevel"
 	"github.com/jilleJr/flog/pkg/logparser"
 )
 
@@ -17,12 +18,13 @@ func ExamplePrinter_nlog_text() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p)
+	printer := NewConsolePrinter(&p, loglevel.Warning)
 
 	for printer.Next() {
 	}
 
 	// Output:
+	// [90m[3mflog: Omitted 1 Trace, 1 Debug, 1 Information.[0m
 	// 2021-01-31 17:33:54.3443|WARN|Program|Sample
 	// 2021-01-31 17:33:54.3443|ERROR|Program|Sample
 	// 2021-01-31 17:33:54.3443|FATAL|Program|Sample
@@ -41,12 +43,13 @@ func ExamplePrinter_nlog_text_multiline() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p)
+	printer := NewConsolePrinter(&p, loglevel.Warning)
 
 	for printer.Next() {
 	}
 
 	// Output:
+	// [90m[3mflog: Omitted 1 Trace, 1 Debug, 1 Information.[0m
 	// 2021-01-31 17:33:54.3443|WARN|Program|Sample
 	//	some other text
 	//	this still counts as the WARN message
@@ -65,12 +68,13 @@ func ExamplePrinter_nlog_ansi() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p)
+	printer := NewConsolePrinter(&p, loglevel.Warning)
 
 	for printer.Next() {
 	}
 
 	// Output:
+	// [90m[3mflog: Omitted 1 Trace, 1 Debug, 1 Information.[0m
 	// [35m2021-01-31 18:37:05.1714|WARN|Program|Sample[0m
 	// [33m2021-01-31 18:37:05.1714|ERROR|Program|Sample[0m
 	// [31m2021-01-31 18:37:05.1714|FATAL|Program|Sample[0m
@@ -87,12 +91,13 @@ time="2021-01-31T19:04:01+01:00" level=fatal msg="A walrus appears" animal=walru
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p)
+	printer := NewConsolePrinter(&p, loglevel.Warning)
 
 	for printer.Next() {
 	}
 
 	// Output:
+	// [90m[3mflog: Omitted 1 Trace, 1 Debug, 1 Information.[0m
 	// time="2021-01-31T19:04:01+01:00" level=warning msg="A walrus appears" animal=walrus
 	// time="2021-01-31T19:04:01+01:00" level=error msg="A walrus appears" animal=walrus
 	// time="2021-01-31T19:04:01+01:00" level=fatal msg="A walrus appears" animal=walrus
@@ -109,12 +114,13 @@ func ExamplePrinter_logrus_ansi() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p)
+	printer := NewConsolePrinter(&p, loglevel.Warning)
 
 	for printer.Next() {
 	}
 
 	// Output:
+	// [90m[3mflog: Omitted 1 Trace, 1 Debug, 1 Information.[0m
 	// [33mWARN[0m[0000] A walrus appears                              [33manimal[0m=walrus
 	// [31mERRO[0m[0000] A walrus appears                              [31manimal[0m=walrus
 	// [31mFATA[0m[0000] A walrus appears                              [31manimal[0m=walrus
@@ -133,12 +139,13 @@ func ExamplePrinter_logrus_ansi_multiline() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p)
+	printer := NewConsolePrinter(&p, loglevel.Warning)
 
 	for printer.Next() {
 	}
 
 	// Output:
+	// [90m[3mflog: Omitted 1 Trace, 1 Debug, 1 Information.[0m
 	// [33mWARN[0m[0000] A walrus appears
 	//	Some
 	//	Multiline                              [33manimal[0m=walrus

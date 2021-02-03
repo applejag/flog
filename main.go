@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"github.com/alecthomas/kong"
+	"github.com/jilleJr/flog/pkg/loglevel"
 	"github.com/jilleJr/flog/pkg/logparser"
 )
 
@@ -33,7 +36,7 @@ func main() {
 	}
 }
 
-func printLogsFromFile(path string, minLevel logparser.Level) {
+func printLogsFromFile(path string, minLevel loglevel.Level) {
 	if file, err := os.Open(path); err != nil {
 		fmt.Printf("ERR: Failed to open file: %s: %v\n", path, err)
 		os.Exit(1)
@@ -43,41 +46,58 @@ func printLogsFromFile(path string, minLevel logparser.Level) {
 	}
 }
 
-func printLogsFromIO(r io.Reader, minLevel logparser.Level) {
+func printLogsFromIO(r io.Reader, minLevel loglevel.Level) {
 	p := logparser.NewIOParser(r)
 
 	printer := NewConsolePrinter(&p, minLevel)
+	ch := setupCloseHandler(printer)
+	defer close(ch)
 
 	for printer.Next() {
 	}
 }
 
-func parseLevelArg(s string) logparser.Level {
+// Thanks https://golangcode.com/handle-ctrl-c-exit-in-terminal/
+// His site shows 404, but the source code is supposed to be found here:
+// https://github.com/eddturtle/golangcode-site
+func setupCloseHandler(p Printer) chan<- os.Signal {
+	ch := make(chan os.Signal)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+	go func(p Printer) {
+		if _, ok := <-ch; ok {
+			p.PrintOmittedLogs()
+			os.Exit(0)
+		}
+	}(p)
+	return ch
+}
+
+func parseLevelArg(s string) loglevel.Level {
 	switch strings.ToLower(s) {
 	case "t", "tra", "trac", "trce", "trace":
-		return logparser.LevelTrace
+		return loglevel.Trace
 
 	case "d", "deb", "dbg", "debu", "debg", "dbug", "debug":
-		return logparser.LevelDebug
+		return loglevel.Debug
 
 	case "i", "inf", "info", "information":
-		return logparser.LevelInformation
+		return loglevel.Information
 
 	case "w", "wrn", "warn", "warning":
-		return logparser.LevelWarning
+		return loglevel.Warning
 
 	case "fail", "e", "err", "erro", "errr", "error":
-		return logparser.LevelError
+		return loglevel.Error
 
 	case "c", "crt", "crit", "critical":
-		return logparser.LevelCritical
+		return loglevel.Critical
 
 	case "f", "fata", "fatl", "fatal":
-		return logparser.LevelFatal
+		return loglevel.Fatal
 
 	case "p", "pan", "pnc", "pani", "panic":
-		return logparser.LevelPanic
+		return loglevel.Panic
 	}
 
-	return logparser.LevelUndefined
+	return loglevel.Undefined
 }
