@@ -34,7 +34,7 @@ func parseLog(s string) ParsedLog {
 	if lvls := levelRegex.FindAllString(stripped, 5); lvls != nil {
 		for _, lvlStr := range lvls {
 			lvlStr = strings.Trim(lvlStr, "|[]():=\"'")
-			if lvl := loglevel.ParseLevel(lvlStr); lvl != loglevel.Undefined {
+			if lvl := loglevel.ParseLevel(lvlStr); lvl != loglevel.Unknown {
 				level = lvl
 				break
 			}

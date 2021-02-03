@@ -28,7 +28,7 @@ func (p *IOParser) Scan() bool {
 	}
 	lastLevel := p.lastLog.Level
 	p.lastLog = parseLog(p.scanner.Text())
-	if p.lastLog.Level == loglevel.Undefined {
+	if p.lastLog.Level == loglevel.Undefined || p.lastLog.Level == loglevel.Unknown {
 		p.lastLog.Level = lastLevel
 	}
 	return true

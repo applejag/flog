@@ -15,15 +15,15 @@ type Printer interface {
 
 type consolePrinter struct {
 	parser        logparser.Parser
-	level         loglevel.Level
+	filter        LogFilter
 	levelsSkipped map[loglevel.Level]int
 	skippedAny    bool
 }
 
-func NewConsolePrinter(p logparser.Parser, lvl loglevel.Level) Printer {
+func NewConsolePrinter(p logparser.Parser, filter LogFilter) Printer {
 	return &consolePrinter{
 		parser:        p,
-		level:         lvl,
+		filter:        filter,
 		levelsSkipped: map[loglevel.Level]int{},
 		skippedAny:    false,
 	}
@@ -34,9 +34,11 @@ func (p *consolePrinter) Next() bool {
 		return false
 	}
 	log := p.parser.ParsedLog()
-	if log.Level >= p.level {
+	if shouldIncludeLogInOutput(log.Level, p.filter) {
 		if p.skippedAny {
-			printSkippedLogs(p.levelsSkipped)
+			if p.filter.Quiet == false {
+				printSkippedLogs(p.levelsSkipped)
+			}
 			p.levelsSkipped = map[loglevel.Level]int{}
 			p.skippedAny = false
 		}
@@ -52,8 +54,32 @@ func (p *consolePrinter) Next() bool {
 	return true
 }
 
+func shouldIncludeLogInOutput(lvl loglevel.Level, filter LogFilter) bool {
+	if filter.WhitelistMask != loglevel.Undefined && filter.WhitelistMask&lvl == loglevel.Undefined {
+		return false
+	}
+
+	if lvl != loglevel.Unknown && lvl != loglevel.Undefined {
+		if filter.MinLevel != loglevel.Undefined && lvl < filter.MinLevel {
+			return false
+		}
+
+		if filter.MaxLevel != loglevel.Undefined && lvl > filter.MaxLevel {
+			return false
+		}
+	} else if filter.BlacklistMask&loglevel.Unknown > 0 {
+		return false
+	}
+
+	if filter.BlacklistMask&lvl != loglevel.Undefined {
+		return false
+	}
+
+	return true
+}
+
 func (p *consolePrinter) PrintOmittedLogs() {
-	if p.skippedAny {
+	if p.skippedAny && p.filter.Quiet == false {
 		printSkippedLogs(p.levelsSkipped)
 	}
 }
