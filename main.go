@@ -14,8 +14,8 @@ import (
 )
 
 var cli struct {
-	MinLevel       string   `name:"min" short:"s" default:"info" help:"Omit logs below specified severity (exclusive)" enum:"t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
-	MaxLevel       string   `name:"max" short:"S" default:"none" help:"Omit logs above specified severity (exclusive)" enum:"t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
+	MinLevel       string   `name:"min" short:"s" default:"info" help:"Omit logs below specified severity (exclusive)" enum:"none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
+	MaxLevel       string   `name:"max" short:"S" default:"none" help:"Omit logs above specified severity (exclusive)" enum:"none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
 	MinTime        string   `name:"since" short:"t" help:"Omit logs timestamped before a specific time (or relative time period ago) [Not yet implemented]"`
 	MaxTime        string   `name:"before" short:"t" help:"Omit logs timestamped after a specific time (or relative time period ago) [Not yet implemented]"`
 	ExcludedLevels []string `name:"exclude" short:"e" help:"Omit logs of specified severity (can be specified multiple times)" enum:"u,?,ukwn,unknown,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
@@ -39,7 +39,7 @@ func main() {
 
 	filter := LogFilter{
 		MinLevel:      parseLevelArg(cli.MinLevel),
-		MaxLevel:      parseLevelArg(cli.MinLevel),
+		MaxLevel:      parseLevelArg(cli.MaxLevel),
 		Quiet:         cli.Quiet,
 		BlacklistMask: parseLevelArgsAsBitmask(cli.ExcludedLevels),
 		WhitelistMask: parseLevelArgsAsBitmask(cli.IncludedLevels),
