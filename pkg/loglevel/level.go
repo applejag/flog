@@ -19,23 +19,23 @@ const (
 func (lvl Level) String() string {
 	switch lvl {
 	case Trace:
-		return "LevelTrace"
+		return "Trace"
 	case Debug:
-		return "LevelDebug"
+		return "Debug"
 	case Information:
-		return "LevelInformation"
+		return "Information"
 	case Warning:
-		return "LevelWarning"
+		return "Warning"
 	case Error:
-		return "LevelError"
+		return "Error"
 	case Critical:
-		return "LevelCritical"
+		return "Critical"
 	case Fatal:
-		return "LevelFatal"
+		return "Fatal"
 	case Panic:
-		return "LevelPanic"
+		return "Panic"
 	}
-	return "LevelUndefined"
+	return "Undefined"
 }
 
 func ParseLevel(s string) Level {

@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/alecthomas/kong"
+	"github.com/jilleJr/flog/pkg/loglevel"
 	"github.com/jilleJr/flog/pkg/logparser"
 )
 
@@ -55,28 +56,28 @@ func printLogsFromIO(r io.Reader, minLevel loglevel.Level) {
 func parseLevelArg(s string) loglevel.Level {
 	switch strings.ToLower(s) {
 	case "t", "tra", "trac", "trce", "trace":
-		return loglevel.LevelTrace
+		return loglevel.Trace
 
 	case "d", "deb", "dbg", "debu", "debg", "dbug", "debug":
-		return loglevel.LevelDebug
+		return loglevel.Debug
 
 	case "i", "inf", "info", "information":
-		return loglevel.LevelInformation
+		return loglevel.Information
 
 	case "w", "wrn", "warn", "warning":
-		return loglevel.LevelWarning
+		return loglevel.Warning
 
 	case "fail", "e", "err", "erro", "errr", "error":
-		return loglevel.LevelError
+		return loglevel.Error
 
 	case "c", "crt", "crit", "critical":
-		return loglevel.LevelCritical
+		return loglevel.Critical
 
 	case "f", "fata", "fatl", "fatal":
-		return loglevel.LevelFatal
+		return loglevel.Fatal
 
 	case "p", "pan", "pnc", "pani", "panic":
-		return loglevel.LevelPanic
+		return loglevel.Panic
 	}
 
 	return loglevel.LevelUndefined

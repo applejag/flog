@@ -30,7 +30,7 @@ func parseLog(s string) ParsedLog {
 		stripped = stripped[loc[1]:]
 	}
 
-	var level Level
+	var level loglevel.Level
 	if lvls := levelRegex.FindAllString(stripped, 5); lvls != nil {
 		for _, lvlStr := range lvls {
 			lvlStr = strings.Trim(lvlStr, "|[]():=\"'")
