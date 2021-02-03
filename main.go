@@ -4,7 +4,9 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"os/signal"
 	"strings"
+	"syscall"
 
 	"github.com/alecthomas/kong"
 	"github.com/jilleJr/flog/pkg/loglevel"
@@ -48,10 +50,26 @@ func printLogsFromIO(r io.Reader, minLevel loglevel.Level) {
 	p := logparser.NewIOParser(r)
 
 	printer := NewConsolePrinter(&p, minLevel)
-	defer printer.PrintOmittedLogs()
+	ch := setupCloseHandler(printer)
+	defer close(ch)
 
 	for printer.Next() {
 	}
+}
+
+// Thanks https://golangcode.com/handle-ctrl-c-exit-in-terminal/
+// His site shows 404, but the source code is supposed to be found here:
+// https://github.com/eddturtle/golangcode-site
+func setupCloseHandler(p Printer) chan<- os.Signal {
+	ch := make(chan os.Signal)
+	signal.Notify(ch, os.Interrupt, syscall.SIGTERM)
+	go func(p Printer) {
+		if _, ok := <-ch; ok {
+			p.PrintOmittedLogs()
+			os.Exit(0)
+		}
+	}(p)
+	return ch
 }
 
 func parseLevelArg(s string) loglevel.Level {

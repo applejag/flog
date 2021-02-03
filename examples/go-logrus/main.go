@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"time"
 	"github.com/sirupsen/logrus"
 )
 
@@ -33,6 +34,12 @@ func main() {
 	log.WithFields(logrus.Fields{
 		"animal": "walrus",
 	}).Error("A walrus appears")
+
+	log.WithFields(logrus.Fields{
+		"animal": "walrus",
+	}).Debug("A walrus appears")
+
+	time.Sleep(1 * time.Minute)
 
 	log.WithFields(logrus.Fields{
 		"animal": "walrus",
