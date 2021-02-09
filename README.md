@@ -63,6 +63,18 @@ Flags:
   -e, --exclude=EXCLUDE,...    Omit logs of specified severity (can be specified multiple times)
   -i, --include=INCLUDE,...    Omit logs of severity not specified with this flag (can be specified multiple times)
   -q, --quiet                  Omit the 'omitted logs' messages.
+
+Severities:
+  Unknown        1, none, null, ?, u, ukwn, unknown
+  Trace          2, t, tra, trac, trce, trace
+  Debug          3, d, deb, debu, debg, dbug, debug
+  Information    4, i, inf, info, information
+  Warning        5, w, wrn, warn, warning
+  Error          6, e, err, erro, errr, error
+  Critical       7, c, crt, crit, critical
+  Fatal          8, f, fata, fatl, fatal
+  Panic          9, p, pan, pnc, pani, panic
+
 ```
 
 ## Installation
