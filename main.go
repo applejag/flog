@@ -5,7 +5,7 @@ import (
 	"io"
 	"os"
 	"os/signal"
-	"strings"
+	"reflect"
 	"syscall"
 
 	"github.com/alecthomas/kong"
@@ -14,14 +14,14 @@ import (
 )
 
 var cli struct {
-	MinLevel       string   `name:"min" short:"s" default:"info" help:"Omit logs below specified severity (exclusive)" enum:"none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
-	MaxLevel       string   `name:"max" short:"S" default:"none" help:"Omit logs above specified severity (exclusive)" enum:"none,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
-	MinTime        string   `name:"since" short:"t" help:"Omit logs timestamped before a specific time (or relative time period ago) [Not yet implemented]"`
-	MaxTime        string   `name:"before" short:"t" help:"Omit logs timestamped after a specific time (or relative time period ago) [Not yet implemented]"`
-	ExcludedLevels []string `name:"exclude" short:"e" help:"Omit logs of specified severity (can be specified multiple times)" enum:"u,?,ukwn,unknown,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
-	IncludedLevels []string `name:"include" short:"i" help:"Omit logs of severity not specified with this flag (can be specified multiple times)" enum:"u,?,ukwn,unknown,t,tra,trac,trce,trace,d,deb,debu,debg,dbug,debug,i,inf,info,information,w,wrn,warn,warning,fail,e,err,erro,errr,error,c,crt,crit,critical,f,fata,fatl,fatal,p,pan,pnc,pani,panic"`
-	Paths          []string `arg optional type:"existingfile" help:"File(s) to read logs from. Uses STDIN if unspecified"`
-	Quiet          bool     `name:"quiet" short:"q" help:"Omit the 'omitted logs' messages."`
+	MinLevel       loglevel.Level   `name:"min" short:"s" default:"info" help:"Omit logs below specified severity (exclusive)"`
+	MaxLevel       loglevel.Level   `name:"max" short:"S" default:"none" help:"Omit logs above specified severity (exclusive)"`
+	MinTime        string           `name:"since" short:"t" help:"Omit logs timestamped before a specific time (or relative time period ago) [Not yet implemented]"`
+	MaxTime        string           `name:"before" short:"t" help:"Omit logs timestamped after a specific time (or relative time period ago) [Not yet implemented]"`
+	ExcludedLevels []loglevel.Level `name:"exclude" short:"e" help:"Omit logs of specified severity (can be specified multiple times)"`
+	IncludedLevels []loglevel.Level `name:"include" short:"i" help:"Omit logs of severity not specified with this flag (can be specified multiple times)"`
+	Paths          []string         `arg optional type:"existingfile" help:"File(s) to read logs from. Uses STDIN if unspecified"`
+	Quiet          bool             `name:"quiet" short:"q" help:"Omit the 'omitted logs' messages."`
 }
 
 type LogFilter struct {
@@ -35,14 +35,16 @@ type LogFilter struct {
 var logFilter LogFilter
 
 func main() {
-	kong.Parse(&cli)
+	kong.Parse(&cli,
+		kong.Help(flogHelp),
+		kong.TypeMapper(reflect.TypeOf(loglevel.Undefined), levelMapper{}))
 
 	filter := LogFilter{
-		MinLevel:      parseLevelArg(cli.MinLevel),
-		MaxLevel:      parseLevelArg(cli.MaxLevel),
+		MinLevel:      cli.MinLevel,
+		MaxLevel:      cli.MaxLevel,
 		Quiet:         cli.Quiet,
-		BlacklistMask: parseLevelArgsAsBitmask(cli.ExcludedLevels),
-		WhitelistMask: parseLevelArgsAsBitmask(cli.IncludedLevels),
+		BlacklistMask: sliceOfArgsAsBitmask(cli.ExcludedLevels),
+		WhitelistMask: sliceOfArgsAsBitmask(cli.IncludedLevels),
 	}
 
 	if len(cli.Paths) > 0 {
@@ -62,6 +64,7 @@ func printLogsFromFile(path string, filter LogFilter) {
 		defer file.Close()
 		printLogsFromIO(file, filter)
 	}
+
 }
 
 func printLogsFromIO(r io.Reader, filter LogFilter) {
@@ -90,43 +93,10 @@ func setupCloseHandler(p Printer) chan<- os.Signal {
 	return ch
 }
 
-func parseLevelArgsAsBitmask(slice []string) loglevel.Level {
+func sliceOfArgsAsBitmask(slice []loglevel.Level) loglevel.Level {
 	m := loglevel.Undefined
-	for _, lvlStr := range slice {
-		m |= parseLevelArg(lvlStr)
+	for _, lvl := range slice {
+		m |= lvl
 	}
 	return m
-}
-
-func parseLevelArg(s string) loglevel.Level {
-	switch strings.ToLower(s) {
-	case "u", "?", "ukwn", "unknown":
-		return loglevel.Unknown
-
-	case "t", "tra", "trac", "trce", "trace":
-		return loglevel.Trace
-
-	case "d", "deb", "dbg", "debu", "debg", "dbug", "debug":
-		return loglevel.Debug
-
-	case "i", "inf", "info", "information":
-		return loglevel.Information
-
-	case "w", "wrn", "warn", "warning":
-		return loglevel.Warning
-
-	case "fail", "e", "err", "erro", "errr", "error":
-		return loglevel.Error
-
-	case "c", "crt", "crit", "critical":
-		return loglevel.Critical
-
-	case "f", "fata", "fatl", "fatal":
-		return loglevel.Fatal
-
-	case "p", "pan", "pnc", "pani", "panic":
-		return loglevel.Panic
-	}
-
-	return loglevel.Undefined
 }
