@@ -14,8 +14,6 @@ func flogHelp(options kong.HelpOptions, ctx *kong.Context) error {
 		return err
 	}
 
-	//  -i, --include=INCLUDE,...    Omit logs of severity not specified with this flag (can be specified multiple times)
-	//  -q, --quiet                  Omit the 'omitted logs' messages.
 	fmt.Println(`
 Severities:
   Unknown        1, none, null, ?, u, ukwn, unknown
