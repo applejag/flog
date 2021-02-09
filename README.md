@@ -79,12 +79,33 @@ Severities:
 
 ## Installation
 
+1. Head over to the latest release
+   <https://github.com/jilleJr/flog/releases/latest>
+
+2. Down in the "Assets", find the one that matches your OS and architecture,
+   and download it.
+
+3. Save it to a location you have added to your `$PATH`, for example
+   `~/.local/bin`
+
+4. Make sure to just rename it to `flog` (or `flog.exe` for Windows users).
+
+5. Done!
+
+
+If your OS or architecture is missing from the list, then
+[create an issue on it](https://github.com/jilleJr/flog/issues/new/choose) and
+I'll make sure to build it to your architecture when I release a new build.
+
+## Building from source
+
 1. Install Go
 
 2. Run the following (outside of a Go project)
 
    ```sh
-   go get github.com/jilleJr/flog
+   # The -u flag updates the package if you've already the package installed.
+   go get -u github.com/jilleJr/flog
    ```
 
 ## Main use case
