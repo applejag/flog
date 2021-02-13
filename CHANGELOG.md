@@ -2,7 +2,11 @@
 
 This project tries to use [SemVer 2.0.0](https://semver.org)
 
-## v0.3.0 (WIP)
+<!--
+    Remember to update the version.go file whenever you add a new version.
+-->
+
+## v0.3.0 (2020-02-13)
 
 - Added debug logging, enabled by specifying `-vv` or `--verbose=2`. (#13)
 
