@@ -51,6 +51,15 @@ fail: Program[0]
 $ flog --help
 Usage: flog [<paths> ...]
 
+Use flog to filter logs on their serverity (even multiline logs), with automatic detection of log formats.
+
+flog Copyright (C) 2021 Kalle Jillheden
+
+    License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
+    This program comes with ABSOLUTELY NO WARRANTY; for details run 'flog --license-w'.
+    This is free software, and you are welcome to redistribute it
+    under certain conditions; run 'flog --license-c' for details.
+
 Arguments:
   [<paths> ...]    File(s) to read logs from. Uses STDIN if unspecified
 
@@ -58,15 +67,15 @@ Flags:
   -h, --help                   Show context-sensitive help.
   -s, --min=info               Omit logs below specified severity (exclusive)
   -S, --max=none               Omit logs above specified severity (exclusive)
-  -t, --since=STRING           Omit logs timestamped before a specific time (or relative time period ago) [Not yet
-                               implemented]
-  -t, --before=STRING          Omit logs timestamped after a specific time (or relative time period ago) [Not yet
-                               implemented]
+  -t, --since=STRING           Omit logs timestamped before a specific time (or relative time period ago) [Not yet implemented]
+  -t, --before=STRING          Omit logs timestamped after a specific time (or relative time period ago) [Not yet implemented]
   -e, --exclude=EXCLUDE,...    Omit logs of specified severity (can be specified multiple times)
   -i, --include=INCLUDE,...    Omit logs of severity not specified with this flag (can be specified multiple times)
   -q, --quiet                  Omit the 'omitted logs' messages. Shorthand for --verbose=0.
   -v, --verbose=1              Enable verbose output (can be specified up to 2 times, ex: --verbose=2 or -vv)
-      --version                Show the version and then exit.
+      --version                Show the version of the program and then exit.
+      --license-c              Show the programs license conditions and then exit. (Warn: a lot of text)
+      --license-w              Show the programs warranty and then exit.
 
 Severities:
   Undefined      0, n, nil, null, none, unde, undefined
