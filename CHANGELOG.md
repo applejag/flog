@@ -6,6 +6,11 @@ This project tries to use [SemVer 2.0.0](https://semver.org)
 
 - Added debug logging, enabled by specifying `-vv` or `--verbose=2`. (#13)
 
+- Fixed default maximum severity being set to "Unknown", i.e. the lowest severity
+  level, causing all logs except the unknown ones to be omitted. This was caused
+  by the value "none" being invalidly interpreted as "Unknown", and is now
+  correctly interpreted as "Undefined". (#14)
+
 ## v0.2.0 (2021-02-09)
 
 - Added list of severities in the help text. (#12)
