@@ -16,7 +16,8 @@ func flogHelp(options kong.HelpOptions, ctx *kong.Context) error {
 
 	fmt.Println(`
 Severities:
-  Unknown        1, none, null, ?, u, ukwn, unknown
+  Undefined      0, n, nil, null, none, unde, undefined
+  Unknown        1, ?, u, ukwn, unkn, unknown
   Trace          2, t, tra, trac, trce, trace
   Debug          3, d, deb, debu, debg, dbug, debug
   Information    4, i, inf, info, information
@@ -67,7 +68,10 @@ func (m levelMapper) Decode(ctx *kong.DecodeContext, target reflect.Value) error
 
 func parseLevelString(s string) (loglevel.Level, error) {
 	switch strings.ToLower(s) {
-	case "1", "none", "null", "u", "?", "ukwn", "unknown":
+	case "0", "nil", "null", "none", "unde", "undefined":
+		return loglevel.Undefined, nil
+
+	case "1", "u", "?", "ukwn", "unkn", "unknown":
 		return loglevel.Unknown, nil
 
 	case "2", "t", "tra", "trac", "trce", "trace":
