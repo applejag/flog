@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"strings"
 
+	"github.com/apex/log"
 	"github.com/jilleJr/flog/pkg/loglevel"
 	"github.com/jilleJr/flog/pkg/logparser"
 )
@@ -14,14 +14,16 @@ type Printer interface {
 }
 
 type consolePrinter struct {
+	name          string
 	parser        logparser.Parser
 	filter        LogFilter
 	levelsSkipped map[loglevel.Level]int
 	skippedAny    bool
 }
 
-func NewConsolePrinter(p logparser.Parser, filter LogFilter) Printer {
+func NewConsolePrinter(name string, p logparser.Parser, filter LogFilter) Printer {
 	return &consolePrinter{
+		name:          name,
 		parser:        p,
 		filter:        filter,
 		levelsSkipped: map[loglevel.Level]int{},
@@ -33,22 +35,25 @@ func (p *consolePrinter) Next() bool {
 	if !p.parser.Scan() {
 		return false
 	}
-	log := p.parser.ParsedLog()
-	if shouldIncludeLogInOutput(log.Level, p.filter) {
+	parsed := p.parser.ParsedLog()
+	log.WithFields(log.Fields{
+		"message": parsed.String,
+		"level":   parsed.Level,
+	}).Debugf("Parsed log from: %s", p.name)
+
+	if shouldIncludeLogInOutput(parsed.Level, p.filter) {
 		if p.skippedAny {
-			if !p.filter.Quiet {
-				printSkippedLogs(p.levelsSkipped)
-			}
+			p.PrintOmittedLogs()
 			p.levelsSkipped = map[loglevel.Level]int{}
 			p.skippedAny = false
 		}
-		fmt.Println(log.String)
+		fmt.Println(parsed.String)
 	} else {
 		p.skippedAny = true
-		if i, ok := p.levelsSkipped[log.Level]; ok {
-			p.levelsSkipped[log.Level] = i + 1
+		if i, ok := p.levelsSkipped[parsed.Level]; ok {
+			p.levelsSkipped[parsed.Level] = i + 1
 		} else {
-			p.levelsSkipped[log.Level] = 1
+			p.levelsSkipped[parsed.Level] = 1
 		}
 	}
 	return true
@@ -79,26 +84,22 @@ func shouldIncludeLogInOutput(lvl loglevel.Level, filter LogFilter) bool {
 }
 
 func (p *consolePrinter) PrintOmittedLogs() {
-	if p.skippedAny && !p.filter.Quiet {
-		printSkippedLogs(p.levelsSkipped)
+	if !p.skippedAny {
+		return
 	}
+
+	if loggingLevel > log.InfoLevel {
+		return
+	}
+
+	fields := getSkippedLevelsFields(p.levelsSkipped)
+	log.WithFields(fields).Infof("Omitted logs from: %s", p.name)
 }
 
 const (
 	resetAnsi   = "\033[0m"
 	skippedAnsi = "\033[90m\033[3m" // gray and italic
 )
-
-func printSkippedLogs(skipped map[loglevel.Level]int) {
-	skippedStrings := getSkippedLevelsSlice(skipped)
-	str := strings.Join(skippedStrings, ", ")
-	fmt.Print(skippedAnsi)
-	fmt.Print("flog: Omitted ")
-	fmt.Print(str)
-	fmt.Print(".")
-	fmt.Print(resetAnsi)
-	fmt.Println()
-}
 
 const printableLevelsLen = 8
 
@@ -113,14 +114,10 @@ var printableLevels = []loglevel.Level{
 	loglevel.Panic,
 }
 
-func getSkippedLevelsSlice(skipped map[loglevel.Level]int) []string {
-	levels := make([]string, printableLevelsLen)
-	index := 0
-	for _, lvl := range printableLevels {
-		if num, ok := skipped[lvl]; ok {
-			levels[index] = fmt.Sprintf("%d %s", num, lvl.String())
-			index++
-		}
+func getSkippedLevelsFields(skipped map[loglevel.Level]int) log.Fields {
+	fields := make(log.Fields, len(skipped))
+	for lvl, count := range skipped {
+		fields[lvl.String()] = count
 	}
-	return levels[0:index]
+	return fields
 }
