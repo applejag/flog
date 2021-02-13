@@ -47,8 +47,7 @@ fail: Program[0]
 
 ## Command-line interface
 
-```
-sh
+```sh
 $ flog --help
 Usage: flog [<paths> ...]
 
