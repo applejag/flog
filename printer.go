@@ -36,7 +36,7 @@ func (p *consolePrinter) Next() bool {
 	log := p.parser.ParsedLog()
 	if shouldIncludeLogInOutput(log.Level, p.filter) {
 		if p.skippedAny {
-			if p.filter.Quiet == false {
+			if !p.filter.Quiet {
 				printSkippedLogs(p.levelsSkipped)
 			}
 			p.levelsSkipped = map[loglevel.Level]int{}
@@ -79,7 +79,7 @@ func shouldIncludeLogInOutput(lvl loglevel.Level, filter LogFilter) bool {
 }
 
 func (p *consolePrinter) PrintOmittedLogs() {
-	if p.skippedAny && p.filter.Quiet == false {
+	if p.skippedAny && !p.filter.Quiet {
 		printSkippedLogs(p.levelsSkipped)
 	}
 }

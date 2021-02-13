@@ -32,8 +32,6 @@ type LogFilter struct {
 	WhitelistMask loglevel.Level
 }
 
-var logFilter LogFilter
-
 func main() {
 	kong.Parse(&cli,
 		kong.Help(flogHelp),
