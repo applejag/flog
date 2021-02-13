@@ -47,7 +47,8 @@ fail: Program[0]
 
 ## Command-line interface
 
-```sh
+```
+sh
 $ flog --help
 Usage: flog [<paths> ...]
 
@@ -56,16 +57,21 @@ Arguments:
 
 Flags:
   -h, --help                   Show context-sensitive help.
-  -s, --min="info"             Omit logs below specified severity (exclusive)
-  -S, --max="none"             Omit logs above specified severity (exclusive)
-  -t, --since=STRING           Omit logs timestamped before a specific time (or relative time period ago) [Not yet implemented]
-  -t, --before=STRING          Omit logs timestamped after a specific time (or relative time period ago) [Not yet implemented]
+  -s, --min=info               Omit logs below specified severity (exclusive)
+  -S, --max=none               Omit logs above specified severity (exclusive)
+  -t, --since=STRING           Omit logs timestamped before a specific time (or relative time period ago) [Not yet
+                               implemented]
+  -t, --before=STRING          Omit logs timestamped after a specific time (or relative time period ago) [Not yet
+                               implemented]
   -e, --exclude=EXCLUDE,...    Omit logs of specified severity (can be specified multiple times)
   -i, --include=INCLUDE,...    Omit logs of severity not specified with this flag (can be specified multiple times)
-  -q, --quiet                  Omit the 'omitted logs' messages.
+  -q, --quiet                  Omit the 'omitted logs' messages. Shorthand for --verbose=0.
+  -v, --verbose=1              Enable verbose output (can be specified up to 2 times, ex: --verbose=2 or -vv)
+      --version                Show the version and then exit.
 
 Severities:
-  Unknown        1, none, null, ?, u, ukwn, unknown
+  Undefined      0, n, nil, null, none, unde, undefined
+  Unknown        1, ?, u, ukwn, unkn, unknown
   Trace          2, t, tra, trac, trce, trace
   Debug          3, d, deb, debu, debg, dbug, debug
   Information    4, i, inf, info, information
@@ -74,7 +80,6 @@ Severities:
   Critical       7, c, crt, crit, critical
   Fatal          8, f, fata, fatl, fatal
   Panic          9, p, pan, pnc, pani, panic
-
 ```
 
 ## Installation
