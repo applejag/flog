@@ -101,17 +101,6 @@ If your OS or architecture is missing from the list, then
 [create an issue on it](https://github.com/jilleJr/flog/issues/new/choose) and
 I'll make sure to build it to your architecture when I release a new build.
 
-## Building from source
-
-1. Install Go
-
-2. Run the following (outside of a Go project)
-
-   ```sh
-   # The -u flag updates the package if you've already the package installed.
-   go get -u github.com/jilleJr/flog
-   ```
-
 ## Main use case
 
 Searching through logs in Kubernetes. For example, to find any error logs in
@@ -126,10 +115,52 @@ kubectl logs name-of-my-pod | flog -s err
 
 And there you have it.
 
-## Note
+## Building from source
 
-This project is under prototype phase.
+1. Install Go
 
-You are welcome to try it out or participate in the design discussions:
-<https://github.com/jilleJr/flog/discussions/categories/ideas>
+2. Run the following (outside of a Go project)
+
+   ```sh
+   # The -u flag updates the package if you've already the package installed.
+   go get -u github.com/jilleJr/flog
+   ```
+
+## Releasing
+
+1. Install Go & Make
+
+2. Run the following to generate the executables into the `bin/` directory
+
+   ```sh
+   make release
+   ```
+
+3. Update the date in `CHANGELOG.md`, for example changing
+
+   ```diff
+   diff --git a/CHANGELOG.md b/CHANGELOG.md
+   index 9622e17..18ce396 100644
+   --- a/CHANGELOG.md
+   +++ b/CHANGELOG.md
+   @@ -6,7 +6,7 @@ This project tries to use [SemVer 2.0.0](https://semver.org)
+        Remember to update the version.go file whenever you add a new version.
+    -->
+   
+   -## v0.3.0 (WIP)
+   +## v0.3.0 (2020-02-13)
+   
+    - Added debug logging, enabled by specifying `-vv` or `--verbose=2`. (#13)
+   
+   ```
+
+4. Create a Git tag
+
+   ```sh
+   git tag v0.3.0 -m "flog v0.3.0"
+   
+   git push --follow-tags
+   ```
+
+5. Create a GitHub release of the Git tag and upload the binaries to that release
 
