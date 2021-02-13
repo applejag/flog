@@ -27,6 +27,7 @@ var args struct {
 	Paths          []string         `arg optional type:"existingfile" help:"File(s) to read logs from. Uses STDIN if unspecified"`
 	Quiet          bool             `name:"quiet" short:"q" help:"Omit the 'omitted logs' messages. Shorthand for --verbose=0."`
 	Verbose        verbosityLevel   `name:"verbose" short:"v" default:"1" type:"counter" help:"Enable verbose output (can be specified up to 2 times, ex: --verbose=2 or -vv)"`
+	Version        kong.VersionFlag `help:"Show the version and then exit."`
 }
 
 type LogFilter struct {
@@ -51,7 +52,12 @@ func setLoggingLevel(quiet bool, v verbosityLevel) {
 
 func main() {
 	kong.Parse(&args,
+		kong.Name("flog"),
+		kong.Description(""),
 		kong.Help(flogHelp),
+		kong.Vars{
+			"version": appVersion,
+		},
 		kong.TypeMapper(reflect.TypeOf(loglevel.Undefined), levelMapper{}))
 
 	log.SetHandler(console.New(os.Stderr, "flog: "))
