@@ -6,6 +6,12 @@ This project tries to use [SemVer 2.0.0](https://semver.org)
     Remember to update the version.go file whenever you add a new version.
 -->
 
+## v0.3.1 (WIP)
+
+- Added license information embedded into the program. The conditions can be
+  retrieved by running `flog --license-c` and the warranty can be solely
+  retrieved by running `flog --license-w`. (#15)
+
 ## v0.3.0 (2020-02-13)
 
 - Added debug logging, enabled by specifying `-vv` or `--verbose=2`. (#13)

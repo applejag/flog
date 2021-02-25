@@ -1,3 +1,19 @@
+// Filter multiline logs based on the log's severity
+// Copyright (C) 2021  Kalle Jillheden
+//
+// flog is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// flog is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
 package main
 
 import (
@@ -27,7 +43,10 @@ var args struct {
 	Paths          []string         `arg optional type:"existingfile" help:"File(s) to read logs from. Uses STDIN if unspecified"`
 	Quiet          bool             `name:"quiet" short:"q" help:"Omit the 'omitted logs' messages. Shorthand for --verbose=0."`
 	Verbose        verbosityLevel   `name:"verbose" short:"v" default:"1" type:"counter" help:"Enable verbose output (can be specified up to 2 times, ex: --verbose=2 or -vv)"`
-	Version        kong.VersionFlag `help:"Show the text \"${version}\" and then exit."`
+	Version        kong.VersionFlag `help:"Show the version of the program and then exit."`
+
+	LicenseConditions bool `name:"license-c" help:"Show the programs license conditions and then exit. (Warn: a lot of text)"`
+	LicenseWarranty   bool `name:"license-w" help:"Show the programs warranty and then exit."`
 }
 
 type LogFilter struct {
@@ -53,12 +72,19 @@ func setLoggingLevel(quiet bool, v verbosityLevel) {
 func main() {
 	kong.Parse(&args,
 		kong.Name("flog"),
-		kong.Description("Use flog to filter logs on their serverity (even multiline logs), with automatic detection of log formats."),
+		kong.Description("Use flog to filter logs on their serverity (even multiline logs), with automatic detection of log formats.\n\n${licenseNotice}"),
 		kong.Help(flogHelp),
 		kong.Vars{
-			"version": appVersion,
+			"version":       versionNotice,
+			"licenseNotice": LicenceNotice,
 		},
 		kong.TypeMapper(reflect.TypeOf(loglevel.Undefined), levelMapper{}))
+
+	if args.LicenseConditions {
+		showLicenseConditionsThenExit()
+	} else if args.LicenseWarranty {
+		showLicenseWarrantyThenExit()
+	}
 
 	log.SetHandler(console.New(os.Stderr, "flog: "))
 	setLoggingLevel(args.Quiet, args.Verbose)
