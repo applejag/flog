@@ -29,3 +29,6 @@ release: test
 	GOOS=linux GOARCH=386 go build -o bin/flog_linux_386
 	GOOS=linux GOARCH=arm go build -o bin/flog_linux_arm
 	GOOS=linux GOARCH=arm64 go build -o bin/flog_linux_arm64
+
+install:
+	go install
