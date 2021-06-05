@@ -16,7 +16,7 @@
 
 package main
 
-const appVersion = "0.3.0"
+const appVersion = "0.4.0"
 
 const versionNotice = `flog ` + appVersion + `
 Copyright (C) 2021 Kalle Jillheden
