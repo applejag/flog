@@ -15,7 +15,7 @@ This project tries to use [SemVer 2.0.0](https://semver.org)
 - Added shell completions, installed via `--completions-install`. (#17)
 
 - Added JSON log parsing. Reads message, timestamp, and level from JSON
-  properties. (#18)
+  properties, given that each line is a separate JSON object. (#18)
 
 ## v0.3.0 (2020-02-13)
 
