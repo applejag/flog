@@ -31,13 +31,13 @@ type Printer interface {
 
 type consolePrinter struct {
 	name          string
-	parser        logparser.Parser
+	parser        logparser.Reader
 	filter        LogFilter
 	levelsSkipped map[loglevel.Level]int
 	skippedAny    bool
 }
 
-func NewConsolePrinter(name string, p logparser.Parser, filter LogFilter) Printer {
+func NewConsolePrinter(name string, p logparser.Reader, filter LogFilter) Printer {
 	return &consolePrinter{
 		name:          name,
 		parser:        p,

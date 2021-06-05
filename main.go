@@ -152,7 +152,7 @@ func printLogsFromFile(path string, filter LogFilter) {
 }
 
 func printLogsFromIO(name string, r io.Reader, filter LogFilter) {
-	p := logparser.NewIOParser(r)
+	p := logparser.NewIOReader(r)
 
 	printer := NewConsolePrinter(name, &p, filter)
 	ch := setupCloseHandler(printer)

@@ -6,11 +6,16 @@ This project tries to use [SemVer 2.0.0](https://semver.org)
     Remember to update the version.go file whenever you add a new version.
 -->
 
-## v0.3.1 (WIP)
+## v0.4.0 (WIP)
 
 - Added license information embedded into the program. The conditions can be
   retrieved by running `flog --license-c` and the warranty can be solely
   retrieved by running `flog --license-w`. (#15)
+
+- Added shell completions, installed via `--completions-install`. (#17)
+
+- Added JSON log parsing. Reads message, timestamp, and level from JSON
+  properties. (#18)
 
 ## v0.3.0 (2020-02-13)
 

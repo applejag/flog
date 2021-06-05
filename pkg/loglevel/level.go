@@ -87,28 +87,28 @@ func singularLevelString(lvl Level) string {
 
 func ParseLevel(s string) Level {
 	switch strings.ToLower(s) {
-	case "trc", "trce", "trac", "trace":
+	case "t", "trc", "trce", "trac", "trace":
 		return Trace
 
-	case "dbg", "debu", "dbug", "debg", "debug":
+	case "d", "dbg", "debu", "dbug", "debg", "debug":
 		return Debug
 
-	case "inf", "info", "information":
+	case "i", "inf", "info", "information":
 		return Information
 
-	case "warn", "warning":
+	case "w", "warn", "warning":
 		return Warning
 
-	case "err", "erro", "error", "fail":
+	case "e", "err", "erro", "error", "fail":
 		return Error
 
-	case "crit", "critical":
+	case "c", "crit", "critical":
 		return Critical
 
-	case "fata", "fatal":
+	case "f", "fata", "fatal":
 		return Fatal
 
-	case "panic":
+	case "p", "panic":
 		return Panic
 	}
 
