@@ -22,9 +22,9 @@ ERRO[0000] A walrus appears                              animal=walrus
 FATA[0000] A walrus appears                              animal=walrus
 ```
 
-And yes, this includes multiline logs, such as those pesky .NET logs:
-
 ### Sample .NET app using [Microsoft.Extensions.Logging.Console](https://docs.microsoft.com/en-us/dotnet/core/extensions/console-log-formatter)
+
+Yes, this includes multiline logs, such as those pesky .NET logs:
 
 ```console
 $ dotnet run
@@ -49,7 +49,7 @@ fail: Program[0]
 
 ## Command-line interface
 
-```sh
+```console
 $ flog --help
 Usage: flog [<paths> ...]
 
