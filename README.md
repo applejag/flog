@@ -4,8 +4,9 @@ Filter logs on their serverity, with automatic detection of log formats
 
 ## Sample usage
 
-```sh
-# Sample Go app using sirupsen/logrus
+### Sample Go app using [sirupsen/logrus](https://github.com/sirupsen/logrus)
+
+```console
 $ go run main.go
 TRAC[0000] A walrus appears                              animal=walrus
 DEBU[0000] A walrus appears                              animal=walrus
@@ -23,8 +24,9 @@ FATA[0000] A walrus appears                              animal=walrus
 
 And yes, this includes multiline logs, such as those pesky .NET logs:
 
-```sh
-# Sample .NET app using Microsoft.Extensions.Logging.Console
+### Sample .NET app using [Microsoft.Extensions.Logging.Console](https://docs.microsoft.com/en-us/dotnet/core/extensions/console-log-formatter)
+
+```console
 $ dotnet run
 trac: Program[0]
       Sample log
@@ -118,8 +120,8 @@ context so that you get a glimpse of what the error was about.
 
 With `flog` you can just run:
 
-```sh
-kubectl logs name-of-my-pod | flog -s err
+```console
+$ kubectl logs name-of-my-pod | flog -s err
 ```
 
 And there you have it.
@@ -130,9 +132,10 @@ And there you have it.
 
 2. Run the following (outside of a Go project)
 
-   ```sh
-   # The -u flag updates the package if you've already the package installed.
-   go get -u github.com/jilleJr/flog
+   > The -u flag updates the package if you've already the package installed.
+
+   ```console
+   $ go get -u github.com/jilleJr/flog
    ```
 
 ## Releasing
@@ -141,8 +144,8 @@ And there you have it.
 
 2. Run the following to generate the executables into the `bin/` directory
 
-   ```sh
-   make release
+   ```console
+   $ make release
    ```
 
 3. Update the date in `CHANGELOG.md`, for example changing
@@ -165,11 +168,15 @@ And there you have it.
 
 4. Create a Git tag
 
-   ```sh
-   git tag v0.3.0 -m "flog v0.3.0"
+   ```console
+   $ git tag v0.3.0 -m "flog v0.3.0"
    
-   git push --follow-tags
+   $ git push --follow-tags
    ```
 
 5. Create a GitHub release of the Git tag and upload the binaries to that release
 
+## License
+
+All code in this repository is licensed under GNU GPLv3. Full license can be
+found inside the [LICENSE](./LICENSE) file.
