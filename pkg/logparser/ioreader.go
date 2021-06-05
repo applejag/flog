@@ -17,12 +17,35 @@
 package logparser
 
 import (
+	"bufio"
+	"io"
+
 	"github.com/jilleJr/flog/pkg/loglevel"
-	"gopkg.in/guregu/null.v3"
 )
 
-type ParsedLog struct {
-	Level     loglevel.Level
-	String    string
-	Timestamp null.Time
+type IOReader struct {
+	scanner *bufio.Scanner
+	lastLog ParsedLog
+}
+
+func NewIOReader(r io.Reader) IOReader {
+	return IOReader{
+		scanner: bufio.NewScanner(r),
+	}
+}
+
+func (p *IOReader) ParsedLog() ParsedLog {
+	return p.lastLog
+}
+
+func (p *IOReader) Scan() bool {
+	if !p.scanner.Scan() {
+		return false
+	}
+	lastLevel := p.lastLog.Level
+	p.lastLog = ParseUsingAnyParser(p.scanner.Text())
+	if p.lastLog.Level == loglevel.Undefined || p.lastLog.Level == loglevel.Unknown {
+		p.lastLog.Level = lastLevel
+	}
+	return true
 }

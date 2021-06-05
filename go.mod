@@ -9,4 +9,5 @@ require (
 	github.com/posener/complete v1.2.3
 	github.com/sirupsen/logrus v1.7.0
 	github.com/willabides/kongplete v0.2.0
+	gopkg.in/guregu/null.v3 v3.5.0 // indirect
 )
