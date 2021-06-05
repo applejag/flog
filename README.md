@@ -130,12 +130,22 @@ And there you have it.
 
 1. Install Go
 
-2. Run the following (outside of a Go project)
+2. Run the following (outside of a Go project) to build the latest release
 
    > The -u flag updates the package if you've already the package installed.
 
    ```console
    $ go get -u github.com/jilleJr/flog
+   ```
+
+   Or if you want to build the latest unreleased version from the `main` branch
+   then clone the repo and run `go install` or `make install`:
+   (No `sudo` is required)
+   
+   ```console
+   $ git clone https://github.com/jilleJr/flog
+   $ cd flog
+   $ make install
    ```
 
 ## Releasing
