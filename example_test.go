@@ -34,7 +34,7 @@ func ExamplePrinter_nlog_text() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p, LogFilter{MinLevel: loglevel.Warning})
+	printer := NewConsolePrinter("test", &p, LogFilter{MinLevel: loglevel.Warning})
 
 	for printer.Next() {
 	}
@@ -59,7 +59,7 @@ func ExamplePrinter_nlog_text_multiline() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p, LogFilter{MinLevel: loglevel.Warning})
+	printer := NewConsolePrinter("test", &p, LogFilter{MinLevel: loglevel.Warning})
 
 	for printer.Next() {
 	}
@@ -84,7 +84,7 @@ func ExamplePrinter_nlog_ansi() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p, LogFilter{MinLevel: loglevel.Warning})
+	printer := NewConsolePrinter("test", &p, LogFilter{MinLevel: loglevel.Warning})
 
 	for printer.Next() {
 	}
@@ -107,7 +107,7 @@ time="2021-01-31T19:04:01+01:00" level=fatal msg="A walrus appears" animal=walru
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p, LogFilter{MinLevel: loglevel.Warning})
+	printer := NewConsolePrinter("test", &p, LogFilter{MinLevel: loglevel.Warning})
 
 	for printer.Next() {
 	}
@@ -130,7 +130,7 @@ func ExamplePrinter_logrus_ansi() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p, LogFilter{MinLevel: loglevel.Warning})
+	printer := NewConsolePrinter("test", &p, LogFilter{MinLevel: loglevel.Warning})
 
 	for printer.Next() {
 	}
@@ -155,7 +155,7 @@ func ExamplePrinter_logrus_ansi_multiline() {
 
 	r := strings.NewReader(input)
 	p := logparser.NewIOParser(r)
-	printer := NewConsolePrinter(&p, LogFilter{MinLevel: loglevel.Warning})
+	printer := NewConsolePrinter("test", &p, LogFilter{MinLevel: loglevel.Warning})
 
 	for printer.Next() {
 	}

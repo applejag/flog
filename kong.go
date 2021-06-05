@@ -82,6 +82,19 @@ func (m levelMapper) Decode(ctx *kong.DecodeContext, target reflect.Value) error
 	}
 }
 
+var predictLevelSuggestions = []string{
+	"0", "nil", "null", "none", "unde", "undefined",
+	"1", "u", "?", "ukwn", "unkn", "unknown",
+	"2", "t", "tra", "trac", "trce", "trace",
+	"3", "d", "deb", "dbg", "debu", "debg", "dbug", "debug",
+	"4", "i", "inf", "info", "information",
+	"5", "w", "wrn", "warn", "warning",
+	"6", "fail", "e", "err", "erro", "errr", "error",
+	"7", "c", "crt", "crit", "critical",
+	"8", "f", "fata", "fatl", "fatal",
+	"9", "p", "pan", "pnc", "pani", "panic",
+}
+
 func parseLevelString(s string) (loglevel.Level, error) {
 	switch strings.ToLower(s) {
 	case "0", "nil", "null", "none", "unde", "undefined":
