@@ -46,6 +46,12 @@ func TestParse(t *testing.T) {
 			level: loglevel.Information,
 			time:  null.TimeFrom(time.Date(time.Now().Year(), 2, 4, 9, 0, 44, 662471, time.UTC)),
 		},
+		{
+			name:  "json",
+			line:  `{"level":"debug","timestamp":"2021-06-05T23:50:00Z","message":"foo bar"}`,
+			level: loglevel.Debug,
+			time:  null.TimeFrom(time.Date(2021, 6, 5, 23, 50, 0, 0, time.UTC)),
+		},
 	}
 	for _, tc := range testCases {
 		t.Run(tc.name, func(t *testing.T) {

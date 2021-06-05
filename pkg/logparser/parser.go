@@ -1,6 +1,7 @@
 package logparser
 
 import (
+	"encoding/json"
 	"regexp"
 	"strings"
 	"time"
@@ -58,6 +59,56 @@ func (p RegExParser) Parse(line string) (ParsedLog, ResultType) {
 	return log, ResultMatch
 }
 
+type JSONParser struct{}
+
+func (p JSONParser) Parse(line string) (ParsedLog, ResultType) {
+	var obj map[string]interface{}
+	if json.Unmarshal([]byte(line), &obj) != nil {
+		return ParsedLog{}, ResultNoMatch
+	}
+	log := ParsedLog{
+		Timestamp: parseTime(readJSONTimestamp(obj), ""),
+		Level:     loglevel.ParseLevel(readJSONLevel(obj)),
+		String:    line,
+	}
+	return log, ResultMatch
+}
+
+func readJSONLevel(obj map[string]interface{}) string {
+	var msg string
+	var ok bool
+	if msg, ok = tryMapValueString(obj, "level"); ok {
+		return msg
+	} else if msg, ok = tryMapValueString(obj, "lvl"); ok {
+		return msg
+	} else if msg, ok = tryMapValueString(obj, "severity"); ok {
+		return msg
+	}
+	return ""
+}
+
+func readJSONTimestamp(obj map[string]interface{}) string {
+	var msg string
+	var ok bool
+	if msg, ok = tryMapValueString(obj, "timestamp"); ok {
+		return msg
+	} else if msg, ok = tryMapValueString(obj, "date"); ok {
+		return msg
+	} else if msg, ok = tryMapValueString(obj, "datetime"); ok {
+		return msg
+	}
+	return ""
+}
+
+func tryMapValueString(obj map[string]interface{}, key string) (string, bool) {
+	if value, ok := obj[key]; ok {
+		if str, ok := value.(string); ok {
+			return str, true
+		}
+	}
+	return "", false
+}
+
 const dateTimeRegex = `\d{4}-\d\d?-\d\d?(?:[ ·T]\d\d?[:.]\d\d?(?:[:.]\d+(?:\.\d+)?)?(?:Z|[+-]?\d{2}:?\d{2})?)?`
 
 func compileRegexp(value string) *regexp.Regexp {
@@ -66,6 +117,7 @@ func compileRegexp(value string) *regexp.Regexp {
 }
 
 var defaultParsers = []Parser{
+	JSONParser{},
 	RegExParser{
 		// 2021-01-31 17:33:54.3326|TRACE|Program|Sample
 		Expression:     compileRegexp(`^({date})\|(\w+)\|.*$`),
@@ -125,6 +177,9 @@ var timeLayouts = []string{
 }
 
 func parseTime(value, preferredLayout string) null.Time {
+	if value == "" {
+		return null.Time{}
+	}
 	if preferredLayout != "" {
 		if t, err := time.Parse(preferredLayout, value); err == nil {
 			return null.TimeFrom(timeDefaults(t))
