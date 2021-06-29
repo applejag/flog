@@ -47,6 +47,12 @@ func TestParse(t *testing.T) {
 			time:  null.TimeFrom(time.Date(time.Now().Year(), 2, 4, 9, 0, 44, 662471, time.UTC)),
 		},
 		{
+			name:  "iver-wharf/wharf-core",
+			line:  `Jun-18 14:50+0200 [DEBUG | TEST | wharf-core/main.go:23] Sample  hello=world`,
+			level: loglevel.Debug,
+			time:  null.TimeFrom(time.Date(time.Now().Year(), 6, 18, 14, 50, 0, 0, time.FixedZone("", 60*60*2))),
+		},
+		{
 			name:  "json",
 			line:  `{"level":"debug","timestamp":"2021-06-05T23:50:00Z","message":"foo bar"}`,
 			level: loglevel.Debug,
@@ -58,10 +64,10 @@ func TestParse(t *testing.T) {
 
 			log := ParseUsingAnyParser(tc.line)
 			if tc.level != log.Level {
-				t.Errorf("wanted %s, got %s", tc.level, log.Level)
+				t.Errorf("wrong log level\nwanted: %s\ngot:    %s", tc.level, log.Level)
 			}
 			if !timeEquals(tc.time, log.Timestamp) {
-				t.Errorf("wanted %s, got %s", nullTimeString(tc.time), nullTimeString(log.Timestamp))
+				t.Errorf("wrong time\nwanted: %s\ngot:    %s", nullTimeString(tc.time), nullTimeString(log.Timestamp))
 			}
 		})
 	}

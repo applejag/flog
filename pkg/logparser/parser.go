@@ -143,6 +143,13 @@ var defaultParsers = []Parser{
 		GroupTimestamp: 2,
 		GroupLevel:     1,
 	},
+	RegExParser{
+		// Jun-18 14:50+0200 [DEBUG | TEST | wharf-core/main.go:23] Sample  hello=world
+		Expression:     compileRegexp(`^([a-zA-Z0-9:+ \-]+) \[(\w+).*$`),
+		TimeLayout:     "Jan-02 15:04Z0700",
+		GroupTimestamp: 1,
+		GroupLevel:     2,
+	},
 }
 
 var timeLayouts = []string{
