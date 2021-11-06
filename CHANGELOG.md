@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2021 Kalle Fagerberg
+
+SPDX-License-Identifier: CC0-1.0
+-->
+
 # flog changelog
 
 This project tries to use [SemVer 2.0.0](https://semver.org)

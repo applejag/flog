@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: 2021 Kalle Fagerberg
+
+SPDX-License-Identifier: CC0-1.0
+-->
+
 # flog
 
 Filter logs on their serverity, with automatic detection of log formats

@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: 2021 Kalle Fagerberg
+
+SPDX-License-Identifier: CC0-1.0
+-->
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
