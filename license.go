@@ -19,18 +19,18 @@
 package main
 
 import (
+	_ "embed"
 	"fmt"
 	"os"
-	_ "embed"
 )
 
 func showLicenseWarrantyThenExit() {
-	fmt.Println(LicenseWarranty)
+	fmt.Println(licenseWarranty)
 	os.Exit(0)
 }
 
 func showLicenseConditionsThenExit() {
-	fmt.Println(LicenseConditions)
+	fmt.Println(licenseConditions)
 	os.Exit(0)
 }
 
@@ -41,7 +41,7 @@ const LicenceNotice = `flog  Copyright (C) 2021  Kalle Jillheden
     under certain conditions; run 'flog --license-c' for details.`
 
 //go:embed assets/GPL-3.0-or-later-warranty.txt
-var LicenseWarranty string
+var licenseWarranty string
 
 //go:embed assets/GPL-3.0-or-later-conditions.txt
-var LicenseConditions string
+var licenseConditions string
