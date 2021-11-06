@@ -6,6 +6,8 @@ SPDX-License-Identifier: CC0-1.0
 
 # flog
 
+[![REUSE status](https://api.reuse.software/badge/github.com/jilleJr/flog)](https://api.reuse.software/info/github.com/jilleJr/flog)
+
 Filter logs on their serverity, with automatic detection of log formats
 
 ## Sample usage
@@ -202,5 +204,7 @@ And there you have it.
 
 ## License
 
-All code in this repository is licensed under GNU GPLv3. Full license can be
-found inside the [LICENSE](./LICENSE) file.
+Written and maintained by [@jilleJr](https://github.com/jilleJr).
+Licensed under the GNU GPL 3.0 or later, or the CC0 1.0, depending on the file.
+
+This repository is [REUSE](https://reuse.software/) compliant.
