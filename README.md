@@ -6,6 +6,7 @@ SPDX-License-Identifier: CC0-1.0
 
 # flog
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/520a6bd7df4144938eec6295b7a98561)](https://app.codacy.com/gh/jilleJr/flog?utm_source=github.com&utm_medium=referral&utm_content=jilleJr/flog&utm_campaign=Badge_Grade_Settings)
 [![REUSE status](https://api.reuse.software/badge/github.com/jilleJr/flog)](https://api.reuse.software/info/github.com/jilleJr/flog)
 
 Filter logs on their serverity, with automatic detection of log formats
