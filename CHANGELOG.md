@@ -15,6 +15,7 @@ This project tries to use [SemVer 2.0.0](https://semver.org)
 ## v0.5.0 (WIP)
 
 - Changed from Go 1.16 to Go 1.18. (6c0f1a3)
+- Changed from Kong to Cobra as flag-parsing framework. (#23)
 
 ## v0.4.0 (2021-06-29)
 
