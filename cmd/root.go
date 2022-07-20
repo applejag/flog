@@ -45,6 +45,8 @@ var flags struct {
 	quiet          bool
 	verbose        int
 
+	completion            flagtype.Shell
+	showCompletionHelp    bool
 	showLicenseConditions bool
 	showLicenseWarranty   bool
 }
@@ -68,11 +70,27 @@ var rootCmd = &cobra.Command{
 
 	Run: func(cmd *cobra.Command, args []string) {
 
-		if flags.showLicenseConditions {
+		switch {
+		case flags.showLicenseConditions:
 			fmt.Println(license.LicenseConditions)
 			return
-		} else if flags.showLicenseWarranty {
+		case flags.showLicenseWarranty:
 			fmt.Println(license.LicenseWarranty)
+			return
+		case flags.showCompletionHelp:
+			fmt.Println(flagtype.ShellCompletionHelp())
+			return
+		case flags.completion != "":
+			switch flags.completion {
+			case flagtype.ShellBash:
+				cmd.GenBashCompletionV2(os.Stdout, true)
+			case flagtype.ShellZsh:
+				cmd.GenZshCompletion(os.Stdout)
+			case flagtype.ShellFish:
+				cmd.GenFishCompletion(os.Stdout, true)
+			case flagtype.ShellPowerShell:
+				cmd.GenPowerShellCompletion(os.Stdout)
+			}
 			return
 		}
 
@@ -119,17 +137,28 @@ with automatic detection of log formats.
 
 func init() {
 	rootCmd.Flags().VarP(&flags.minLevel, "min", "s", "Omit logs below specified severity (exclusive)")
+	rootCmd.RegisterFlagCompletionFunc("min", flagtype.CompleteLogLevel)
 	rootCmd.Flags().VarP(&flags.maxLevel, "max", "S", "Omit logs above specified severity (exclusive)")
+	rootCmd.RegisterFlagCompletionFunc("max", flagtype.CompleteLogLevel)
 	rootCmd.Flags().StringVarP(&flags.minTime, "since", "t", "", "Omit logs timestamped before a specific time (or relative time period ago) [Not yet implemented]")
 	rootCmd.Flags().StringVarP(&flags.minTime, "before", "T", "", "Omit logs timestamped after a specific time (or relative time period ago) [Not yet implemented]")
 	rootCmd.Flags().VarP(&flags.excludedLevels, "exclude", "e", "Omit logs of specified severity (can be specified multiple times)")
+	rootCmd.RegisterFlagCompletionFunc("exclude", flagtype.CompleteLogLevel)
 	rootCmd.Flags().VarP(&flags.includedLevels, "include", "i", "Omit logs of severity not specified with this flag (can be specified multiple times)")
-	rootCmd.Flags().BoolVarP(&flags.quiet, "quiet", "q", flags.quiet, "Omit the 'omitted logs' messages. Shorthand for --verbose=0.")
+	rootCmd.RegisterFlagCompletionFunc("include", flagtype.CompleteLogLevel)
+
+	rootCmd.Flags().BoolVarP(&flags.quiet, "quiet", "q", flags.quiet, "Omit the 'omitted logs' messages. Shorthand for --verbose=0")
 	rootCmd.Flags().CountVarP(&flags.verbose, "verbose", "v", "Enable verbose output (can be specified up to 2 times, ex: --verbose=2 or -vv)")
+
+	rootCmd.Flags().Bool("version", false, "Show the program's version and then exit")
+	rootCmd.Flags().Bool("help", false, "Show this help text and then exit")
+	rootCmd.Flags().BoolVar(&flags.showCompletionHelp, "help-completion", false, "Show help for generating shell completions and then exit")
+	rootCmd.Flags().Var(&flags.completion, "completion", `Generate shell completions (for "bash", "zsh", "fish", or "powershell")`)
+	rootCmd.RegisterFlagCompletionFunc("completion", flagtype.CompleteShell)
 	rootCmd.Flags().BoolVar(&flags.showLicenseConditions, "license-c", false, "Show the program's license conditions and then exit. (Warn: a lot of text)")
-	rootCmd.Flags().BoolVar(&flags.showLicenseWarranty, "license-w", false, "Show the program's warranty and then exit.")
-	rootCmd.Flags().Bool("version", false, "Show the program's version and then exit.")
-	rootCmd.Flags().Bool("help", false, "Show this help text and then exit.")
+	rootCmd.Flags().MarkHidden("license-c")
+	rootCmd.Flags().BoolVar(&flags.showLicenseWarranty, "license-w", false, "Show the program's warranty and then exit")
+	rootCmd.Flags().MarkHidden("license-w")
 }
 
 func printLogsFromFile(path string, filter loglevel.Filter) {
