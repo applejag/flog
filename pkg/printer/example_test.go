@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package printer_test
 
 import (
 	"os"
@@ -26,6 +26,7 @@ import (
 	"github.com/jilleJr/flog/internal/apex/handlers/console"
 	"github.com/jilleJr/flog/pkg/loglevel"
 	"github.com/jilleJr/flog/pkg/logparser"
+	"github.com/jilleJr/flog/pkg/printer"
 )
 
 func ExamplePrinter_logrus_text() {
@@ -37,12 +38,11 @@ time="2021-01-31T19:04:01+01:00" level=warning msg="A walrus appears" animal=wal
 time="2021-01-31T19:04:01+01:00" level=error msg="A walrus appears" animal=walrus
 time="2021-01-31T19:04:01+01:00" level=fatal msg="A walrus appears" animal=walrus`
 
-	r := strings.NewReader(input)
-	p := logparser.NewIOReader(r)
-	printer := NewConsolePrinter("test", &p, LogFilter{MinLevel: loglevel.Warning})
+	r := logparser.NewIOReader(strings.NewReader(input))
+	p := printer.NewConsolePrinter("test", &r, loglevel.Filter{MinLevel: loglevel.Warning}, log.InfoLevel)
 	log.SetHandler(console.New(os.Stdout, "flog: "))
 
-	for printer.Next() {
+	for p.Next() {
 	}
 
 	// Output:
@@ -63,12 +63,11 @@ func ExamplePrinter_logrus_ansi_multiline() {
 [31mERRO[0m[0000] A walrus appears                              [31manimal[0m=walrus
 [31mFATA[0m[0000] A walrus appears                              [31manimal[0m=walrus`
 
-	r := strings.NewReader(input)
-	p := logparser.NewIOReader(r)
-	printer := NewConsolePrinter("test", &p, LogFilter{MinLevel: loglevel.Warning})
+	r := logparser.NewIOReader(strings.NewReader(input))
+	p := printer.NewConsolePrinter("test", &r, loglevel.Filter{MinLevel: loglevel.Warning}, log.InfoLevel)
 	log.SetHandler(console.New(os.Stdout, "flog: "))
 
-	for printer.Next() {
+	for p.Next() {
 	}
 
 	// Output:

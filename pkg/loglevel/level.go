@@ -48,11 +48,15 @@ var singularLevels = []Level{
 }
 
 func (lvl Level) String() string {
+	return lvl.StringDelim('|')
+}
+
+func (lvl Level) StringDelim(delim rune) string {
 	var b = strings.Builder{}
 	for _, singularLevel := range singularLevels {
 		if lvl&singularLevel != Undefined {
 			if b.Len() > 0 {
-				b.WriteRune('|')
+				b.WriteRune(delim)
 			}
 			b.WriteString(singularLevelString(singularLevel))
 		}
@@ -61,6 +65,16 @@ func (lvl Level) String() string {
 		return "Undefined"
 	}
 	return b.String()
+}
+
+func (lvl Level) Levels() []Level {
+	var slice []Level
+	for _, singularLevel := range singularLevels {
+		if lvl&singularLevel != Undefined {
+			slice = append(slice, singularLevel)
+		}
+	}
+	return slice
 }
 
 func singularLevelString(lvl Level) string {
@@ -89,28 +103,28 @@ func singularLevelString(lvl Level) string {
 
 func ParseLevel(s string) Level {
 	switch strings.ToLower(s) {
-	case "t", "trc", "trce", "trac", "trace":
+	case "0", "t", "trc", "trce", "trac", "trace":
 		return Trace
 
-	case "d", "dbg", "debu", "dbug", "debg", "debug":
+	case "1", "d", "dbg", "debu", "dbug", "debg", "debug":
 		return Debug
 
-	case "i", "inf", "info", "information":
+	case "2", "i", "inf", "info", "information":
 		return Information
 
-	case "w", "warn", "warning":
+	case "3", "w", "warn", "warning":
 		return Warning
 
-	case "e", "err", "erro", "error", "fail":
+	case "4", "e", "err", "erro", "error", "fail":
 		return Error
 
-	case "c", "crit", "critical":
+	case "5", "c", "crit", "critical":
 		return Critical
 
-	case "f", "fata", "fatal":
+	case "6", "f", "fata", "fatal":
 		return Fatal
 
-	case "p", "panic":
+	case "7", "p", "panic":
 		return Panic
 	}
 

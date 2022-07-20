@@ -16,32 +16,32 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package license
 
 import (
 	_ "embed"
 	"fmt"
-	"os"
 )
 
-func showLicenseWarrantyThenExit() {
-	fmt.Println(licenseWarranty)
-	os.Exit(0)
-}
-
-func showLicenseConditionsThenExit() {
-	fmt.Println(licenseConditions)
-	os.Exit(0)
-}
-
-const LicenceNotice = `flog  Copyright (C) 2021  Kalle Jillheden
+func LicenceNotice(appVersion string) string {
+	return fmt.Sprintf(`flog %s  Copyright (C) 2021  Kalle Jillheden
     License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
     This program comes with ABSOLUTELY NO WARRANTY; for details run 'flog --license-w'.
     This is free software, and you are welcome to redistribute it
-    under certain conditions; run 'flog --license-c' for details.`
+    under certain conditions; run 'flog --license-c' for details.`, appVersion)
+}
 
-//go:embed assets/GPL-3.0-or-later-warranty.txt
-var licenseWarranty string
+//go:embed GPL-3.0-or-later-warranty.txt
+var LicenseWarranty string
 
-//go:embed assets/GPL-3.0-or-later-conditions.txt
-var licenseConditions string
+//go:embed GPL-3.0-or-later-conditions.txt
+var LicenseConditions string
+
+func VersionNotice(appVersion string) string {
+	return fmt.Sprintf(`flog %s
+Copyright (C) 2021 Kalle Fagerberg
+License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>.
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+`, appVersion)
+}
