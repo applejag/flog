@@ -48,11 +48,15 @@ var singularLevels = []Level{
 }
 
 func (lvl Level) String() string {
+	return lvl.StringDelim('|')
+}
+
+func (lvl Level) StringDelim(delim rune) string {
 	var b = strings.Builder{}
 	for _, singularLevel := range singularLevels {
 		if lvl&singularLevel != Undefined {
 			if b.Len() > 0 {
-				b.WriteRune('|')
+				b.WriteRune(delim)
 			}
 			b.WriteString(singularLevelString(singularLevel))
 		}
@@ -61,6 +65,16 @@ func (lvl Level) String() string {
 		return "Undefined"
 	}
 	return b.String()
+}
+
+func (lvl Level) Levels() []Level {
+	var slice []Level
+	for _, singularLevel := range singularLevels {
+		if lvl&singularLevel != Undefined {
+			slice = append(slice, singularLevel)
+		}
+	}
+	return slice
 }
 
 func singularLevelString(lvl Level) string {

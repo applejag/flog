@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package printer
 
 import (
 	"fmt"
@@ -34,18 +34,20 @@ type Printer interface {
 type consolePrinter struct {
 	name          string
 	parser        logparser.Reader
-	filter        LogFilter
+	filter        loglevel.Filter
 	levelsSkipped map[loglevel.Level]int
 	skippedAny    bool
+	loggingLevel  log.Level
 }
 
-func NewConsolePrinter(name string, p logparser.Reader, filter LogFilter) Printer {
+func NewConsolePrinter(name string, p logparser.Reader, filter loglevel.Filter, loggingLevel log.Level) Printer {
 	return &consolePrinter{
 		name:          name,
 		parser:        p,
 		filter:        filter,
 		levelsSkipped: map[loglevel.Level]int{},
 		skippedAny:    false,
+		loggingLevel:  loggingLevel,
 	}
 }
 
@@ -77,7 +79,7 @@ func (p *consolePrinter) Next() bool {
 	return true
 }
 
-func shouldIncludeLogInOutput(lvl loglevel.Level, filter LogFilter) bool {
+func shouldIncludeLogInOutput(lvl loglevel.Level, filter loglevel.Filter) bool {
 	if filter.WhitelistMask != loglevel.Undefined && filter.WhitelistMask&lvl == loglevel.Undefined {
 		return false
 	}
@@ -106,7 +108,7 @@ func (p *consolePrinter) PrintOmittedLogs() {
 		return
 	}
 
-	if loggingLevel > log.InfoLevel {
+	if p.loggingLevel > log.InfoLevel {
 		return
 	}
 

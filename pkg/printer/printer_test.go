@@ -16,7 +16,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package printer
 
 import (
 	"fmt"
@@ -61,7 +61,7 @@ func TestShouldIncludeLogInOutput_MinLevel(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d/input/%v/minLevel/%v", i, tc.input, tc.minLevel), func(t *testing.T) {
-			got := shouldIncludeLogInOutput(tc.input, LogFilter{MinLevel: tc.minLevel})
+			got := shouldIncludeLogInOutput(tc.input, loglevel.Filter{MinLevel: tc.minLevel})
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
 			}
@@ -94,7 +94,7 @@ func TestShouldIncludeLogInOutput_MaxLevel(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d/input/%v/maxLevel/%v", i, tc.input, tc.maxLevel), func(t *testing.T) {
-			got := shouldIncludeLogInOutput(tc.input, LogFilter{MaxLevel: tc.maxLevel})
+			got := shouldIncludeLogInOutput(tc.input, loglevel.Filter{MaxLevel: tc.maxLevel})
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
 			}
@@ -132,7 +132,7 @@ func TestShouldIncludeLogInOutput_BlacklistMask(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d/input/%v/blacklistMask/%v", i, tc.input, tc.blacklistMask), func(t *testing.T) {
-			got := shouldIncludeLogInOutput(tc.input, LogFilter{BlacklistMask: tc.blacklistMask})
+			got := shouldIncludeLogInOutput(tc.input, loglevel.Filter{BlacklistMask: tc.blacklistMask})
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
 			}
@@ -180,7 +180,7 @@ func TestShouldIncludeLogInOutput_WhitelistMask(t *testing.T) {
 
 	for i, tc := range testCases {
 		t.Run(fmt.Sprintf("%d/input/%v/whitelistMask/%v", i, tc.input, tc.whitelistMask), func(t *testing.T) {
-			got := shouldIncludeLogInOutput(tc.input, LogFilter{WhitelistMask: tc.whitelistMask})
+			got := shouldIncludeLogInOutput(tc.input, loglevel.Filter{WhitelistMask: tc.whitelistMask})
 			if got != tc.want {
 				t.Errorf("got %v, want %v", got, tc.want)
 			}

@@ -16,32 +16,38 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package flagtype
 
 import (
-	_ "embed"
 	"fmt"
-	"os"
+
+	"github.com/jilleJr/flog/pkg/loglevel"
+	"github.com/spf13/pflag"
 )
 
-func showLicenseWarrantyThenExit() {
-	fmt.Println(licenseWarranty)
-	os.Exit(0)
+type LogLevel loglevel.Level
+
+// Ensure it conforms to the interface
+var lvl LogLevel = 0
+var _ pflag.Value = &lvl
+
+func (lvl *LogLevel) Level() loglevel.Level {
+	return loglevel.Level(*lvl)
 }
 
-func showLicenseConditionsThenExit() {
-	fmt.Println(licenseConditions)
-	os.Exit(0)
+func (lvl *LogLevel) String() string {
+	return lvl.Level().String()
 }
 
-const LicenceNotice = `flog  Copyright (C) 2021  Kalle Jillheden
-    License GPLv3+: GNU GPL version 3 or later <https://gnu.org/licenses/gpl.html>
-    This program comes with ABSOLUTELY NO WARRANTY; for details run 'flog --license-w'.
-    This is free software, and you are welcome to redistribute it
-    under certain conditions; run 'flog --license-c' for details.`
+func (lvl *LogLevel) Set(str string) error {
+	newLvl := loglevel.ParseLevel(str)
+	if newLvl == loglevel.Unknown {
+		return fmt.Errorf("unknown log level: %q", str)
+	}
+	*lvl = LogLevel(newLvl)
+	return nil
+}
 
-//go:embed assets/GPL-3.0-or-later-warranty.txt
-var licenseWarranty string
-
-//go:embed assets/GPL-3.0-or-later-conditions.txt
-var licenseConditions string
+func (lvl *LogLevel) Type() string {
+	return "loglevel"
+}
