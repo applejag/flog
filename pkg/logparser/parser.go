@@ -79,7 +79,7 @@ func (p RegExParser) Parse(line string) (ParsedLog, ResultType) {
 type JSONParser struct{}
 
 func (p JSONParser) Parse(line string) (ParsedLog, ResultType) {
-	var obj map[string]interface{}
+	var obj map[string]any
 	if json.Unmarshal([]byte(line), &obj) != nil {
 		return ParsedLog{}, ResultNoMatch
 	}
@@ -91,7 +91,7 @@ func (p JSONParser) Parse(line string) (ParsedLog, ResultType) {
 	return log, ResultMatch
 }
 
-func readJSONLevel(obj map[string]interface{}) string {
+func readJSONLevel(obj map[string]any) string {
 	var msg string
 	var ok bool
 	if msg, ok = tryMapValueString(obj, "level"); ok {
@@ -104,7 +104,7 @@ func readJSONLevel(obj map[string]interface{}) string {
 	return ""
 }
 
-func readJSONTimestamp(obj map[string]interface{}) string {
+func readJSONTimestamp(obj map[string]any) string {
 	var msg string
 	var ok bool
 	if msg, ok = tryMapValueString(obj, "timestamp"); ok {
@@ -117,7 +117,7 @@ func readJSONTimestamp(obj map[string]interface{}) string {
 	return ""
 }
 
-func tryMapValueString(obj map[string]interface{}, key string) (string, bool) {
+func tryMapValueString(obj map[string]any, key string) (string, bool) {
 	if value, ok := obj[key]; ok {
 		if str, ok := value.(string); ok {
 			return str, true
